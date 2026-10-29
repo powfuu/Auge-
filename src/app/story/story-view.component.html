@@ -1,0 +1,153 @@
+<GridLayout rows="auto, *">
+  @let s = story();
+
+  <!-- Shareable card, laid out off-screen so it can be snapshotted to an image. -->
+  <StackLayout row="1" #card class="share-card" width="360" height="450" translateX="-4000" verticalAlignment="top" horizontalAlignment="left">
+    <Label [text]="today" class="card-eyebrow"></Label>
+    <StackLayout orientation="horizontal">
+      <Label text="Auge" class="card-brand"></Label>
+      <Label text="!" class="card-brand bang"></Label>
+    </StackLayout>
+    <Label [text]="'#' + s.tag" class="card-tag" textWrap="true"></Label>
+    <Label [text]="s.brief" class="card-brief" textWrap="true"></Label>
+    <GridLayout columns="*" class="heat-track card-track">
+      <StackLayout class="heat-fill" horizontalAlignment="left" [width]="s.heat + '%'"></StackLayout>
+    </GridLayout>
+    <Label [text]="certaintySummary()" class="card-meta" textWrap="true"></Label>
+    <Label text="augeapp · el mundo en 30 segundos" class="card-foot"></Label>
+  </StackLayout>
+
+  <GridLayout row="0" columns="auto, *, auto" class="topbar">
+    @if (showBack()) {
+      <Label col="0" text="←" class="icon-btn" (tap)="back()"></Label>
+    }
+    <StackLayout col="2" orientation="horizontal">
+      <Label text="↗︎" class="icon-btn share" (tap)="share(card)"></Label>
+      <Label [text]="following() ? 'Siguiendo' : 'Seguir'" class="pill" [class.pill-on]="following()" (tap)="follow($event)"></Label>
+    </StackLayout>
+  </GridLayout>
+
+  <ScrollView row="1">
+    <StackLayout class="detail">
+      <Label [text]="categoryLabel(s.category).toUpperCase()" class="eyebrow" (loaded)="rise($event, 0)"></Label>
+      <Label [text]="'#' + s.tag" class="title" textWrap="true" (loaded)="rise($event, 0)"></Label>
+
+      <Label class="meta" (loaded)="rise($event, 60)">
+        <FormattedString>
+          <Span [text]="s.region"></Span>
+          <Span text="  ·  "></Span>
+          <Span [text]="'Actualizado hace ' + timeAgo(s.updatedAt)"></Span>
+        </FormattedString>
+      </Label>
+
+      <GridLayout columns="*" class="heat-track big" (loaded)="rise($event, 100)">
+        <StackLayout class="heat-fill" horizontalAlignment="left" [width]="s.heat + '%'" (loaded)="grow($event, 250)"></StackLayout>
+      </GridLayout>
+
+      <Label [text]="s.brief" class="lead" textWrap="true" (loaded)="rise($event, 140)"></Label>
+
+      <!-- Photos & videos: first thing after the brief, since it's what you look at while inside an auge. -->
+      @if (s.media.length) {
+        <Label [text]="'FOTOS Y VÍDEOS · ' + s.media.length" class="section" (loaded)="rise($event, 170)"></Label>
+        <ScrollView orientation="horizontal" scrollBarIndicatorVisible="false" class="gallery" (loaded)="rise($event, 190)">
+          <StackLayout orientation="horizontal">
+            @for (m of s.media; track $index; let i = $index) {
+              <GridLayout class="media-tile" [class.media-video]="m.type === 'video'" (tap)="openMedia(i)">
+                @if (m.type === 'image') {
+                  <Image [src]="m.url" stretch="aspectFill" loadMode="async" class="media-img"></Image>
+                } @else {
+                  <StackLayout verticalAlignment="center">
+                    <Label text="▶" class="media-play"></Label>
+                    <Label [text]="m.source" class="media-source"></Label>
+                  </StackLayout>
+                }
+              </GridLayout>
+            }
+          </StackLayout>
+        </ScrollView>
+        <Label text="Imágenes de contexto con licencia libre, no del suceso. Los vídeos abren el medio original." class="muted disclaimer" textWrap="true"></Label>
+      }
+
+      <Label text="EL INFORME" class="section" (loaded)="rise($event, 200)"></Label>
+      @for (f of s.facts; track f.text; let i = $index) {
+        <GridLayout columns="auto, *" rows="auto, auto" class="fact" (loaded)="rise($event, 260 + i * 80)">
+          <Label col="0" rowSpan="2" [class]="'bullet ' + f.certainty"></Label>
+          <Label col="1" row="0" [text]="labels[f.certainty]" [class]="'badge ' + f.certainty"></Label>
+          <Label col="1" row="1" [text]="f.text" class="fact-text" textWrap="true"></Label>
+        </GridLayout>
+      }
+
+      @if (s.claims.length) {
+        <Label text="LA RED VS. LOS HECHOS" class="section" (loaded)="rise($event, 400)"></Label>
+        @for (c of s.claims; track c.claim; let i = $index) {
+          <StackLayout class="claim" (loaded)="rise($event, 420 + i * 60)">
+            <Label [text]="'«' + c.claim.replace('«', '').replace('»', '') + '»'" class="claim-text" textWrap="true"></Label>
+            <Label class="claim-verdict" textWrap="true">
+              <FormattedString>
+                <Span [text]="verdicts[c.verdict] + '  '" [class]="'verdict ' + c.verdict"></Span>
+                <Span [text]="c.note" class="muted"></Span>
+              </FormattedString>
+            </Label>
+          </StackLayout>
+        }
+      }
+
+      @if (s.timeline.length) {
+        <Label text="CRONOLOGÍA" class="section" (loaded)="rise($event, 440)"></Label>
+        @for (t of s.timeline; track t.text; let i = $index; let last = $last) {
+          <GridLayout columns="auto, *" class="tl-row" (loaded)="rise($event, 460 + i * 50)">
+            <GridLayout col="0" rows="auto, *" width="14" class="tl-rail">
+              <Label row="0" class="tl-dot" [class.tl-now]="last"></Label>
+              @if (!last) {
+                <StackLayout row="1" class="tl-line"></StackLayout>
+              }
+            </GridLayout>
+            <StackLayout col="1" class="tl-body">
+              <Label [text]="'hace ~' + timeAgo(t.at)" class="meta tl-time"></Label>
+              <Label [text]="t.text" class="fact-text" textWrap="true"></Label>
+            </StackLayout>
+          </GridLayout>
+        }
+      }
+
+      <Label text="PULSO EN REDES" class="section" (loaded)="rise($event, 440)"></Label>
+      <Label [text]="s.pulse.mood" class="pulse-mood" textWrap="true" (loaded)="rise($event, 460)"></Label>
+      @for (n of s.pulse.networks; track n.name; let i = $index) {
+        <GridLayout columns="80, *, 36" class="pulse-row" (loaded)="rise($event, 470 + i * 40)">
+          <Label col="0" [text]="n.name" class="pulse-name"></Label>
+          <GridLayout col="1" columns="*" class="heat-track pulse-track">
+            <StackLayout class="heat-fill" horizontalAlignment="left" [width]="n.volume + '%'" (loaded)="grow($event, 520 + i * 60)"></StackLayout>
+          </GridLayout>
+          <Label col="2" [text]="n.volume.toString()" class="muted pulse-val"></Label>
+        </GridLayout>
+      }
+
+      <Label text="EN REDES" class="section" (loaded)="rise($event, 480)"></Label>
+      <FlexboxLayout flexWrap="wrap" (loaded)="rise($event, 500)">
+        @for (t of s.topics; track t) {
+          <Label [text]="t" class="chip"></Label>
+        }
+      </FlexboxLayout>
+      @for (p of s.posts; track p.handle; let i = $index) {
+        <StackLayout class="post" (loaded)="rise($event, 540 + i * 60)">
+          <Label class="post-head">
+            <FormattedString>
+              <Span [text]="p.author" class="post-author"></Span>
+              <Span [text]="'  ' + p.handle + ' · ' + p.platform" class="muted"></Span>
+            </FormattedString>
+          </Label>
+          <Label [text]="p.text" class="post-text" textWrap="true"></Label>
+        </StackLayout>
+      }
+      <Label text="Pulso, publicaciones y bulos son simulados hasta conectar las APIs de redes." class="muted disclaimer" textWrap="true"></Label>
+
+      <Label [text]="'FUENTES · ' + s.clustered + ' artículos agrupados'" class="section" (loaded)="rise($event, 700)"></Label>
+      @for (src of s.sources; track src.url; let i = $index) {
+        <GridLayout columns="*, auto" class="source" (loaded)="rise($event, 740 + i * 60)" (tap)="openSource(src)">
+          <Label col="0" [text]="src.name" class="source-name"></Label>
+          <Label col="1" text="↗" class="muted"></Label>
+        </GridLayout>
+      }
+    </StackLayout>
+  </ScrollView>
+</GridLayout>

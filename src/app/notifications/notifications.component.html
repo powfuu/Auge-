@@ -1,0 +1,23 @@
+<GridLayout rows="auto, *" class="screen" androidOverflowEdge="none,cutout" (unloaded)="onUnloaded()">
+  <Label row="0" text="Notificaciones" class="tab-title"></Label>
+
+  <ScrollView row="1">
+    <StackLayout class="detail">
+      @for (n of inbox(); track n.id; let i = $index) {
+        <GridLayout columns="auto, *" class="notif" (loaded)="rise($event, i * 60)" (tap)="open(n)">
+          <Label col="0" class="notif-dot" [opacity]="n.read ? 0 : 1"></Label>
+          <StackLayout col="1">
+            <Label [text]="n.title" class="row-label" textWrap="true"></Label>
+            <Label [text]="n.body" class="muted row-hint" textWrap="true"></Label>
+            <Label [text]="'hace ' + timeAgo(n.at)" class="meta"></Label>
+          </StackLayout>
+        </GridLayout>
+      } @empty {
+        <StackLayout class="empty" (loaded)="rise($event, 0)">
+          <Label text="Todo tranquilo." class="lead"></Label>
+          <Label text="Sigue un auge y te avisaremos cuando cambie." class="muted" textWrap="true"></Label>
+        </StackLayout>
+      }
+    </StackLayout>
+  </ScrollView>
+</GridLayout>

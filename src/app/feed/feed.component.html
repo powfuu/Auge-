@@ -1,0 +1,83 @@
+<!-- Phones: one column. Tablets / dual screens: feed left, report right (equal halves so a hinge falls between them). -->
+<GridLayout rows="*" [columns]="layout.wide() ? '*, *' : '*'" class="screen" androidOverflowEdge="none,cutout" (loaded)="onLoaded()" (layoutChanged)="onLayout($event)">
+  <GridLayout col="0" rows="auto, *" [class.pane-left]="layout.wide()">
+    <!-- Header -->
+    <GridLayout row="0" rows="auto, auto" columns="*" class="header" (loaded)="rise($event, 0)">
+      <StackLayout row="0" col="0">
+        <Label [text]="today" class="eyebrow"></Label>
+        <StackLayout orientation="horizontal">
+          <Label text="Auge" class="brand"></Label>
+          <Label text="!" class="brand bang" (loaded)="bang($event)"></Label>
+        </StackLayout>
+      </StackLayout>
+      <GridLayout row="1" col="0" columns="*, auto" class="live">
+      <StackLayout col="0" orientation="horizontal">
+        <GridLayout width="8" height="8" verticalAlignment="center">
+          <Label class="dot ping" (loaded)="pulse($event)"></Label>
+          <Label class="dot"></Label>
+        </GridLayout>
+        <Label text="En auge ahora" class="muted live-text"></Label>
+      </StackLayout>
+      <Label col="1" [text]="brief.playing() ? '❚❚ Pausar' : '▶ Escuchar 60 s'" class="listen" (tap)="brief.toggle()"></Label>
+      </GridLayout>
+    </GridLayout>
+
+    <!-- Feed -->
+    <PullToRefresh row="1" class="ptr" (refresh)="onRefresh($event)">
+    <ScrollView>
+      <StackLayout class="feed">
+        @if (showChanges() && changes().length) {
+          <StackLayout class="changes" (loaded)="rise($event, 80)">
+            <GridLayout columns="*, auto">
+              <Label col="0" [text]="'¿QUÉ CAMBIÓ? · ' + changes().length + ' desde tu última visita'" class="changes-title"></Label>
+              <Label col="1" text="✕" class="muted" (tap)="showChanges.set(false)"></Label>
+            </GridLayout>
+            @for (c of changes().slice(0, 4); track c.text) {
+              <Label class="change" textWrap="true" (tap)="open($event, c.story)">
+                <FormattedString>
+                  <Span [text]="'#' + c.story.tag + '  '" class="change-tag"></Span>
+                  <Span [text]="c.text"></Span>
+                </FormattedString>
+              </Label>
+            }
+          </StackLayout>
+        }
+        @for (s of stories(); track s.id; let i = $index) {
+          <GridLayout rows="auto, auto, auto, auto" columns="auto, *" class="card" [class.card-on]="layout.wide() && current() === s.id"
+                      (loaded)="rise($event, 120 + i * 90)" (tap)="open($event, s)">
+            <Label row="0" col="0" rowSpan="2" [text]="(i + 1).toString()" class="rank"></Label>
+            <Label row="0" col="1" [text]="'#' + s.tag" class="tag" textWrap="true" [class.tag-followed]="followed().has(s.id)"></Label>
+            @if (followed().has(s.id)) {
+              <Label row="0" col="1" text="&#xe866;" class="mi followed-badge" horizontalAlignment="right" verticalAlignment="top"></Label>
+            }
+            <Label row="1" col="1" [text]="s.brief" class="brief" textWrap="true"></Label>
+
+            <GridLayout row="2" col="1" columns="*" class="heat-track">
+              <StackLayout class="heat-fill" horizontalAlignment="left" [width]="s.heat + '%'" (loaded)="grow($event, 300 + i * 90)"></StackLayout>
+            </GridLayout>
+
+            <Label row="3" col="1" class="meta">
+              <FormattedString>
+                <Span [text]="s.region"></Span>
+                <Span text="  ·  "></Span>
+                <Span [text]="s.clustered + ' fuentes agrupadas'"></Span>
+                <Span text="  ·  "></Span>
+                <Span [text]="timeAgo(s.updatedAt)"></Span>
+              </FormattedString>
+            </Label>
+          </GridLayout>
+        } @empty {
+          <Label text="Nada en auge en tus temas ahora mismo. Cambia tus temas en Perfil → Ajustes." class="muted end" textWrap="true"></Label>
+        }
+        <Label text="Ver todos los auges →" class="muted see-all" (tap)="go('/explore')"></Label>
+      </StackLayout>
+    </ScrollView>
+    </PullToRefresh>
+  </GridLayout>
+
+  @if (layout.wide() && current(); as id) {
+    @for (key of [id]; track key) {
+      <ns-story-view col="1" [storyId]="key" [showBack]="false"></ns-story-view>
+    }
+  }
+</GridLayout>

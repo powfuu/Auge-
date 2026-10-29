@@ -1,0 +1,27 @@
+<GridLayout rows="auto, *, auto" class="viewer" (swipe)="swipe($event)">
+  <GridLayout row="0" columns="auto, *, auto" class="topbar">
+    <Label col="0" text="✕" class="icon-btn viewer-btn" (tap)="close()"></Label>
+    <Label col="2" [text]="(index() + 1) + ' / ' + story.media.length" class="viewer-count"></Label>
+  </GridLayout>
+
+  @let m = item();
+  <GridLayout row="1" (loaded)="onStage($event)">
+    @if (m.type === 'image') {
+      <Image [src]="m.url" stretch="aspectFit" loadMode="async"></Image>
+    } @else {
+      <StackLayout verticalAlignment="center" (tap)="openOriginal()">
+        <Label text="▶" class="viewer-play"></Label>
+        <Label [text]="m.title" class="viewer-title" textWrap="true"></Label>
+        <Label [text]="'Ver en ' + m.source" class="viewer-credit"></Label>
+      </StackLayout>
+    }
+  </GridLayout>
+
+  <StackLayout row="2" class="viewer-caption">
+    @if (m.type === 'image') {
+      <Label [text]="m.caption" class="viewer-title" textWrap="true"></Label>
+      <Label [text]="'Foto: ' + m.credit + ' · ' + m.license + ' · Wikimedia Commons'" class="viewer-credit" textWrap="true"></Label>
+    }
+    <Label text="Ver original ↗" class="viewer-link" (tap)="openOriginal()"></Label>
+  </StackLayout>
+</GridLayout>

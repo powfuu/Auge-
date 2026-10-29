@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auge! — vista previa web</title>
+<!-- Web mirror of the NativeScript screens (same data, styles and motion) for quick previewing. -->
+<style>
+  :root { --bg:#fff; --fg:#0a0a0a; --muted:#737373; --line:#f0f0f0; --track:#f2f2f2; --border:#eaeaea; --sub:#525252; }
+  .dark { --bg:#000; --fg:#ededed; --muted:#8f8f8f; --line:#1a1a1a; --track:#1c1c1c; --border:#262626; --sub:#a1a1a1; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:#e5e5e5; font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif; display:flex; justify-content:center; padding:24px 0; }
+  .phone { width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:var(--bg); color:var(--fg);
+           box-shadow:0 30px 80px rgba(0,0,0,.25); transition:background .4s,color .4s; }
+  .view { position:absolute; inset:0; overflow-y:auto; scrollbar-width:none; transition:transform .35s cubic-bezier(.16,1,.3,1); background:var(--bg); }
+  .view::-webkit-scrollbar { display:none; }
+  .rise { opacity:0; transform:translateY(24px); animation:rise .6s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes rise { to { opacity:1; transform:none; } }
+  .header { display:flex; justify-content:space-between; padding:56px 20px 14px; }
+  .eyebrow { font-size:11px; font-weight:700; letter-spacing:1.6px; color:#a3a3a3; margin-bottom:2px; }
+  .brand { font-size:60px; font-weight:900; letter-spacing:-4px; line-height:1; display:flex; }
+  .brand .l { display:inline-block; opacity:0; transform:translateY(60%); filter:blur(6px); animation:letter .8s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes letter { to { opacity:1; transform:none; filter:none; } }
+  .brand .bang { margin-left:3px; padding-right:4px; filter:none; transform-origin:50% 90%;
+    background:linear-gradient(180deg,#ff9500,#ff3b30 60%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:drop .9s cubic-bezier(.34,1.56,.64,1) .45s forwards, sway 4.2s ease-in-out 1.6s infinite; }
+  @keyframes drop { from { opacity:0; transform:translateY(-70%) rotate(-20deg); } to { opacity:1; transform:none; } }
+  @keyframes sway { 0%,60%,100% { transform:rotate(0); } 20% { transform:rotate(8deg); } 40% { transform:rotate(-3deg); } }
+  .live { display:flex; align-items:center; gap:8px; margin-top:4px; font-size:13px; color:var(--muted); }
+  .dot { width:8px; height:8px; border-radius:50%; background:#ff3b30; position:relative; }
+  .dot::after { content:""; position:absolute; inset:0; border-radius:50%; background:#ff3b30; animation:ping 1.4s ease-out infinite; }
+  @keyframes ping { from { transform:scale(1); opacity:.6 } to { transform:scale(2.2); opacity:0 } }
+  .icon-btn { width:40px; height:40px; border-radius:20px; border:1px solid var(--border); background:none; color:var(--fg); font-size:18px; cursor:pointer; transition:transform .15s; }
+  .icon-btn:active, .card:active { transform:scale(.97); }
+  .card { display:grid; grid-template-columns:28px 1fr; padding:18px 20px; border-bottom:1px solid var(--line); cursor:pointer; transition:transform .2s, background .2s; }
+  .card:hover { background:var(--line); }
+  .rank { color:#a3a3a3; font-weight:600; font-size:15px; padding-top:3px; }
+  .tag { font-size:19px; font-weight:700; letter-spacing:-.4px; }
+  .brief { font-size:15px; color:var(--sub); margin-top:4px; line-height:1.4; }
+  .track { height:3px; border-radius:2px; background:var(--track); margin-top:12px; overflow:hidden; }
+  .track.big { height:4px; margin:16px 0 4px; }
+  .fill { height:100%; border-radius:2px; background:linear-gradient(90deg,#ff3b30,#ff9500); transform-origin:left; transform:scaleX(0); animation:grow .9s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes grow { to { transform:scaleX(1); } }
+  .meta { font-size:12px; color:#8f8f8f; margin-top:8px; }
+  .end { text-align:center; color:var(--muted); font-size:13px; margin:28px 0 40px; }
+  .topbar { display:flex; justify-content:space-between; align-items:center; padding:52px 16px 8px; }
+  .pill { padding:8px 18px; border-radius:999px; font-weight:600; font-size:14px; border:1px solid transparent; background:var(--fg); color:var(--bg); cursor:pointer; transition:all .25s; }
+  .pill.on { background:transparent; color:var(--muted); border-color:#d4d4d4; }
+  .detail { padding:8px 20px 48px; }
+  .title { font-size:32px; font-weight:800; letter-spacing:-1.3px; }
+  .lead { font-size:18px; margin-top:8px; line-height:1.45; }
+  .section { font-size:11px; font-weight:700; letter-spacing:1.3px; color:#8f8f8f; margin:32px 0 10px; }
+  .fact { display:flex; gap:12px; margin-bottom:14px; }
+  .bar { width:3px; border-radius:2px; flex-shrink:0; }
+  .badge { font-size:11px; font-weight:700; }
+  .fact p { font-size:15px; margin-top:2px; }
+  .confirmed { color:#16a34a; } .developing { color:#f59e0b; } .uncertain { color:#a3a3a3; }
+  .bar.confirmed { background:#16a34a; } .bar.developing { background:#f59e0b; } .bar.uncertain { background:#a3a3a3; }
+  .source { display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-weight:600; color:var(--fg); text-decoration:none; }
+  .source span { color:var(--muted); }
+  .premium { margin-top:36px; padding:18px; border-radius:14px; border:1px solid var(--border); color:var(--muted); font-size:14px; }
+  .premium b { display:block; color:var(--fg); font-size:15px; margin-bottom:4px; }
+  @media (max-width:420px) { body { padding:56px 0 0; background:var(--bg); } .phone { width:100vw; height:100vh; border-radius:0; box-shadow:none; } }
+  .header { padding-bottom:0; }
+  .live { margin:12px 20px 14px; }
+  .view { transform:translateX(100%); }
+  .view.current { transform:none; }
+  .view.under { transform:translateX(-30%); }
+  .head-actions { display:flex; gap:8px; align-items:flex-start; }
+  .ghost { height:40px; padding:0 14px; border-radius:999px; border:none; background:none; color:var(--muted); font:600 13px inherit; font-family:inherit; cursor:pointer; }
+  .ghost:hover { color:var(--fg); }
+  .see-all { display:block; margin:24px auto 32px; padding:8px; border:none; background:none; color:var(--muted); font:13px inherit; font-family:inherit; cursor:pointer; }
+  .see-all:hover { color:var(--fg); }
+  .topbar-title { font-size:17px; font-weight:700; margin-left:12px; flex:1; }
+  .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .tile { aspect-ratio:1; min-width:0; overflow:hidden; padding:14px 12px; display:flex; flex-direction:column; cursor:pointer; transition:background .2s, transform .15s; }
+  .tile:hover { background:var(--line); }
+  .tile:active { transform:scale(.96); }
+  .tile-heat { margin-bottom:auto; font-size:30px; font-weight:900; letter-spacing:-2px; color:#ff3b30; }
+  .tile-tag { overflow-wrap:anywhere; font-size:13px; font-weight:700; line-height:1.25; max-height:3.75em; flex-shrink:0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .tile-region { font-size:11px; color:#8f8f8f; margin-top:4px; }
+  .followed { padding-bottom:28px; margin-bottom:28px; border-bottom:1px solid var(--line); }
+  .followed-head { display:flex; justify-content:space-between; gap:12px; }
+  .followed .title { font-size:24px; letter-spacing:-.8px; }
+  .unfollow { border:none; background:none; color:var(--muted); font-size:12px; cursor:pointer; white-space:nowrap; font-family:inherit; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; background:var(--line); }
+  .post { padding:12px 0; border-bottom:1px solid var(--line); }
+  .post-head { font-size:13px; color:var(--muted); }
+  .post-head b { color:var(--fg); font-size:14px; margin-right:4px; }
+  .post p { font-size:15px; margin-top:4px; line-height:1.4; }
+  .empty { padding-top:40px; color:var(--muted); font-size:14px; }
+  .empty .lead { color:var(--fg); margin-bottom:6px; }
+  .icon-btn { position:relative; }
+  .badge-dot { position:absolute; top:6px; right:6px; width:9px; height:9px; border-radius:50%; background:#ff3b30; animation:pop .4s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes pop { from { transform:scale(0); } }
+  .head-actions .icon-btn { font-size:16px; }
+  .cat { font-size:11px; font-weight:700; letter-spacing:1.4px; color:#a3a3a3; margin-bottom:4px; }
+  .disclaimer { font-size:11px; color:var(--muted); margin-top:8px; }
+  .chip { cursor:default; transition:background .2s,color .2s,transform .15s; }
+  button.chip { border:none; font-family:inherit; color:var(--fg); cursor:pointer; }
+  button.chip:active { transform:scale(.94); }
+  .chip.on { background:var(--fg); color:var(--bg); }
+  .hint { font-size:13px; color:var(--muted); margin:-4px 0 12px; }
+  .row { display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--line); cursor:pointer; }
+  .row > div { flex:1; }
+  .row-label { font-size:15px; font-weight:600; }
+  .row-hint { font-size:13px; color:var(--muted); margin-top:2px; }
+  .switch { width:46px; height:28px; border-radius:14px; padding:3px; background:var(--border); transition:background .25s; flex-shrink:0; }
+  .switch::after { content:""; display:block; width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
+  .switch.on { background:#ff3b30; }
+  .switch.on::after { transform:translateX(18px); }
+  .link { border:none; background:none; color:#ff3b30; font:600 14px inherit; font-family:inherit; margin-top:14px; padding:0; cursor:pointer; }
+  .notif { display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--line); cursor:pointer; }
+  .notif-dot { width:8px; height:8px; border-radius:50%; background:#ff3b30; margin-top:6px; flex-shrink:0; }
+  .notif-dot.read { visibility:hidden; }
+  /* In-app push banner */
+  .toast { position:absolute; left:10px; right:10px; top:10px; z-index:10; padding:12px 14px; border-radius:16px; background:var(--fg); color:var(--bg);
+           font-size:13px; box-shadow:0 10px 30px rgba(0,0,0,.25); transform:translateY(-140%); transition:transform .5s cubic-bezier(.16,1,.3,1); cursor:pointer; }
+  .toast.show { transform:none; }
+  .toast b { display:block; font-size:14px; margin-bottom:2px; }
+  /* Device switcher (preview only) */
+  .devices { position:fixed; top:16px; left:50%; transform:translateX(-50%); display:flex; gap:4px; padding:4px; border-radius:999px; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.08); z-index:20; }
+  .devices button { border:none; background:none; padding:6px 14px; border-radius:999px; font:600 13px inherit; font-family:inherit; color:#737373; cursor:pointer; }
+  .devices button.on { background:#0a0a0a; color:#fff; }
+  body { padding-top:64px; }
+  .phone { transition:width .5s cubic-bezier(.16,1,.3,1), height .5s cubic-bezier(.16,1,.3,1), border-radius .5s, background .4s, color .4s; }
+  .phone.tablet { width:min(1024px, 96vw); height:min(720px, 86vh); border-radius:28px; }
+  .phone.duo { width:min(1000px, 96vw); height:min(700px, 86vh); border-radius:22px; }
+  .split { display:grid; grid-template-columns:1fr 1fr; height:100%; }
+  .duo .split { grid-template-columns:1fr 22px 1fr; }
+  .hinge { background:linear-gradient(90deg,#111,#333,#111); }
+  .pane { overflow-y:auto; scrollbar-width:none; position:relative; }
+  .pane-left { border-right:1px solid var(--line); }
+  .duo .pane-left { border-right:none; }
+  .card.on { background:var(--line); }
+  .tablet .grid, .duo .grid { grid-template-columns:repeat(5,minmax(0,1fr)); }
+  /* Pull to refresh */
+  .ptr { position:sticky; top:0; height:0; z-index:5; display:flex; justify-content:center; pointer-events:none; }
+  .ptr-ball { width:38px; height:38px; margin-top:-48px; border-radius:50%; background:var(--bg); box-shadow:0 4px 18px rgba(0,0,0,.14);
+              display:grid; place-items:center; opacity:0; transition:opacity .2s; }
+  .ptr-ball svg { width:22px; height:22px; }
+  .ptr-ball circle { fill:none; stroke:url(#ptrGrad); stroke-width:3; stroke-linecap:round; stroke-dasharray:56; }
+  .ptr.spinning .ptr-ball svg { animation:spin .8s linear infinite; }
+  .ptr.spinning circle { animation:dash 1.2s ease-in-out infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  @keyframes dash { 0% { stroke-dashoffset:50; } 50% { stroke-dashoffset:14; } 100% { stroke-dashoffset:50; } }
+  .scroller-content { transition:transform .35s cubic-bezier(.16,1,.3,1); }
+  .pulled .scroller-content { transition:none; }
+  .pulled { user-select:none; }
+  .scroller-content { position:relative; }
+  .updated { position:absolute; left:0; right:0; top:22px; text-align:center; font-size:12px; color:var(--muted); animation:fadeout 2.4s forwards; }
+  @keyframes fadeout { 0%,70% { opacity:1; } 100% { opacity:0; } }
+  /* Social pulse */
+  .pulse-mood { font-size:15px; margin-bottom:10px; line-height:1.4; }
+  .pulse-row { display:grid; grid-template-columns:80px 1fr 30px; align-items:center; gap:8px; margin-bottom:8px; }
+  .pulse-row .track { margin:0; }
+  .pulse-name { font-size:13px; font-weight:600; }
+  .pulse-val { font-size:12px; color:var(--muted); text-align:right; }
+  .share { margin-right:8px; }
+  /* Audio brief */
+  .live { display:flex; align-items:center; }
+  .listen { white-space:nowrap; flex-shrink:0; margin-left:auto; border:none; background:none; color:#ff3b30; font:700 12px inherit; font-family:inherit; cursor:pointer; }
+  /* ¿Qué cambió? */
+  .changes { margin:4px 20px 8px; padding:14px 16px; border-radius:14px; background:var(--line); }
+  .changes-head { display:flex; justify-content:space-between; font-size:11px; font-weight:700; letter-spacing:1px; color:#8f8f8f; }
+  .changes-head button { border:none; background:none; color:var(--muted); cursor:pointer; }
+  .change { font-size:14px; margin-top:8px; line-height:1.35; cursor:pointer; }
+  .change b { margin-right:6px; }
+  /* Photos & videos */
+  .gallery { display:flex; gap:10px; overflow-x:auto; margin:0 -20px; padding:0 20px 4px; scroll-snap-type:x mandatory; scrollbar-width:none; }
+  .gallery::-webkit-scrollbar { display:none; }
+  .media-tile { flex:0 0 220px; height:150px; border-radius:14px; overflow:hidden; scroll-snap-align:start; cursor:pointer; background:var(--line);
+                border:none; padding:0; position:relative; transition:transform .2s; }
+  .media-tile:hover { transform:scale(.98); }
+  .media-tile img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .6s cubic-bezier(.16,1,.3,1); }
+  .media-tile:hover img { transform:scale(1.06); }
+  .media-video { background:linear-gradient(135deg,#1a1a1a,#3a0d0b); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+  .media-video .play { width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,.15); display:grid; place-items:center; font-size:18px; backdrop-filter:blur(6px); }
+  .media-video small { font-size:12px; color:#d4d4d4; }
+  .lightbox { position:absolute; inset:0; z-index:30; background:#000; color:#fff; display:flex; flex-direction:column; opacity:0; transition:opacity .25s; }
+  .lightbox.show { opacity:1; }
+  .lightbox .stage { flex:1; display:grid; place-items:center; overflow:hidden; touch-action:pan-y; }
+  .lightbox .stage img { max-width:100%; max-height:100%; object-fit:contain; transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .2s; }
+  .lightbox .cap { padding:12px 20px 28px; text-align:center; }
+  .lightbox .cap b { display:block; font-size:16px; }
+  .lightbox .cap small { display:block; font-size:12px; color:#8f8f8f; margin-top:4px; }
+  .lightbox .cap a { display:inline-block; margin-top:12px; color:#ff3b30; font-weight:600; font-size:14px; text-decoration:none; }
+  .lightbox .nav { position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:20px; border:none; background:rgba(255,255,255,.12); color:#fff; cursor:pointer; }
+  .lightbox .nav.prev { left:10px; } .lightbox .nav.next { right:10px; }
+  /* La red vs. los hechos */
+  .claim { padding:12px 14px; margin-bottom:8px; border-radius:12px; border:1px solid var(--border); }
+  .claim-text { font-size:15px; font-weight:600; }
+  .claim-verdict { font-size:13px; margin-top:4px; color:var(--muted); }
+  .verdict { font-weight:800; margin-right:6px; }
+  .verdict.contradicted { color:#ff3b30; } .verdict.unproven { color:#f59e0b; } .verdict.consistent { color:#16a34a; }
+  /* Cronología */
+  .tl { position:relative; padding-left:24px; }
+  .tl::before { content:""; position:absolute; left:4px; top:6px; bottom:18px; width:2px; background:var(--line); }
+  .tl-item { position:relative; padding-bottom:14px; }
+  .tl-item::before { content:""; position:absolute; left:-24px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--border); }
+  .tl-item.now::before { background:#ff3b30; box-shadow:0 0 0 4px rgba(255,59,48,.18); }
+  .tl-item p { font-size:15px; margin-top:2px; }
+  /* Avatars */
+  .av { border-radius:50%; display:grid; place-items:center; flex-shrink:0; line-height:1; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+  .av-btn { border:none; padding:0; background:none; cursor:pointer; border-radius:50%; transition:transform .15s; }
+  .av-btn:active { transform:scale(.92); }
+  .enter { height:40px; padding:0 16px; border-radius:999px; border:none; background:var(--fg); color:var(--bg); font:700 13px inherit; font-family:inherit; cursor:pointer; }
+  /* Login */
+  .login { display:flex; flex-direction:column; min-height:100%; padding:0 28px 24px; }
+  .login .skip { align-self:flex-end; margin-top:16px; border:none; background:none; color:var(--muted); font:600 14px inherit; font-family:inherit; cursor:pointer; }
+  .login-body { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .login .brand { justify-content:center; font-size:76px; }
+  .login-tagline { text-align:center; color:var(--muted); font-size:15px; line-height:1.45; margin:12px 0 36px; }
+  .auth-btn { width:100%; height:54px; border-radius:27px; margin-bottom:12px; border:1px solid var(--border); background:var(--bg); color:var(--fg);
+              display:flex; align-items:center; justify-content:center; gap:10px; font:700 16px inherit; font-family:inherit; cursor:pointer; transition:transform .15s, opacity .2s; }
+  .auth-btn:active { transform:scale(.97); }
+  .auth-btn svg { width:20px; height:20px; }
+  .auth-apple { background:var(--fg); color:var(--bg); border-color:var(--fg); }
+  .auth-primary { background:linear-gradient(90deg,#ff3b30,#ff9500); color:#fff; border:none; margin-top:8px; }
+  .auth-primary:disabled { opacity:.4; }
+  .auth-input { width:100%; height:54px; border-radius:14px; border:none; padding:0 16px; font:17px inherit; font-family:inherit; background:var(--line); color:var(--fg); margin:8px 0 4px; outline:none; }
+  .auth-input:focus { box-shadow:0 0 0 2px #ff3b30; }
+  .otp { text-align:center; font-size:26px; font-weight:800; letter-spacing:10px; }
+  .back-link { display:block; margin:10px auto 0; border:none; background:none; color:var(--muted); font:14px inherit; font-family:inherit; cursor:pointer; }
+  .login-foot { font-size:11px; color:var(--muted); text-align:center; line-height:1.5; }
+  .form-error { color:#ff3b30; font-size:14px; font-weight:600; margin-top:12px; }
+  /* Profile */
+  .profile-head { display:flex; gap:16px; align-items:center; margin-top:8px; }
+  .profile-head .title { font-size:24px; }
+  .handle { color:var(--muted); font-size:15px; margin-top:2px; }
+  .pills { display:flex; gap:8px; margin-top:8px; }
+  .plan-pill { font-size:12px; font-weight:700; padding:4px 12px; border-radius:999px; background:var(--line); color:var(--muted); border:1px solid transparent; font-family:inherit; }
+  .plan-pill.pro { background:linear-gradient(90deg,#ff3b30,#ff9500); color:#fff; }
+  button.plan-pill { cursor:pointer; background:none; border-color:var(--border); color:var(--fg); }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); margin-top:24px; padding:16px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); text-align:center; }
+  .stats b { display:block; font-size:24px; font-weight:900; letter-spacing:-1px; }
+  .stats span { font-size:12px; color:var(--muted); }
+  .row .chev { color:var(--muted); }
+  .danger { border:none; background:none; color:#ff3b30; font:600 15px inherit; font-family:inherit; margin-top:28px; padding:0; cursor:pointer; }
+  /* Edit profile */
+  .edit-preview { text-align:center; margin:8px 0 4px; }
+  .edit-preview .av { margin:0 auto; animation:pop .45s cubic-bezier(.34,1.56,.64,1); }
+  .edit-preview .title { font-size:24px; margin-top:12px; }
+  .av-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .av-option { border:3px solid transparent; border-radius:50%; padding:2px; background:none; cursor:pointer; justify-self:center; transition:border-color .2s, transform .2s; }
+  .av-option:hover { transform:scale(1.06); }
+  .av-option.on { border-color:#ff3b30; }
+  .handle-input { display:flex; align-items:center; background:var(--line); border-radius:14px; padding-left:16px; margin:8px 0 4px; }
+  .handle-input span { color:var(--muted); font-size:17px; }
+  .handle-input input { flex:1; height:54px; border:none; background:none; color:var(--fg); font:17px inherit; font-family:inherit; outline:none; padding:0 8px 0 2px; }
+  .handle-input:focus-within { box-shadow:0 0 0 2px #ff3b30; }
+  .save { height:36px; padding:0 18px; border-radius:999px; border:none; background:var(--fg); color:var(--bg); font:700 14px inherit; font-family:inherit; cursor:pointer; }
+  .save:disabled { opacity:.35; }
+  /* Bottom tab bar */
+  .phone { display:flex; flex-direction:column; }
+  .stage-area { position:relative; flex:1; overflow:hidden; }
+  .tabbar { display:grid; grid-template-columns:repeat(5,1fr); height:53px; border-top:.5px solid var(--border); background:var(--bg); flex-shrink:0;
+            transition:transform .3s cubic-bezier(.16,1,.3,1), margin .3s; z-index:15; }
+  .tabbar.hidden { transform:translateY(100%); margin-bottom:-53px; }
+  .tabbar button { position:relative; border:none; background:none; color:var(--fg); cursor:pointer; display:grid; place-items:center; transition:color .2s, transform .15s; }
+  .tabbar button:active { transform:scale(.88); }
+  .tabbar button.on { color:var(--fg); }
+  .tabbar svg { width:26px; height:26px; }
+  .tabbar button:not(.on) svg { opacity:.9; }
+  .tabbar .av { transition:box-shadow .2s; }
+  .tabbar button.on .av { box-shadow:0 0 0 2px var(--bg), 0 0 0 3.5px var(--fg); }
+  .tab-dot { position:absolute; top:12px; left:calc(50% + 5px); width:7px; height:7px; border-radius:50%; background:#ff3b30; animation:pop .4s cubic-bezier(.34,1.56,.64,1); }
+  .tab-title { font-size:28px; font-weight:900; letter-spacing:-1.4px; padding:20px 20px 8px; display:flex; justify-content:space-between; align-items:center; }
+  /* Explore */
+  .legend { display:flex; gap:10px; margin:4px 20px 12px; padding:12px 14px; border-radius:14px; background:var(--line); }
+  .legend svg { width:22px; height:22px; color:#ff3b30; flex-shrink:0; }
+  .legend b { display:block; font-size:14px; }
+  .legend span { font-size:12px; color:var(--muted); line-height:1.4; }
+  .filters { display:flex; gap:8px; overflow-x:auto; padding:0 20px 12px; scrollbar-width:none; }
+  .filters::-webkit-scrollbar { display:none; }
+  .filters .chip { flex-shrink:0; }
+  .tile-num { display:flex; align-items:flex-end; gap:2px; line-height:1; }
+  .tile-num small { font-size:11px; font-weight:700; color:#a3a3a3; margin-bottom:4px; }
+  .tile .track { height:3px; margin:2px 0 0; }
+  .tile-heat { flex:none; }
+  .tile-tag { margin-top:auto; -webkit-line-clamp:2; max-height:2.5em; }
+  /* Lightbox bar (own class: ".bar" is the facts bullet) */
+  .lb-bar { display:flex; justify-content:space-between; align-items:center; padding:16px; }
+  .lb-close { width:40px; height:40px; border-radius:50%; border:1px solid #333; background:none; color:#fff; cursor:pointer; display:grid; place-items:center; font-size:18px; line-height:1; padding:0; }
+  .lb-count { color:#a3a3a3; font-size:13px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  /* Followed badge */
+  .card, .tile { position:relative; }
+  .followed-badge { position:absolute; top:16px; right:16px; width:18px; height:18px; color:#ff3b30; animation:pop .4s cubic-bezier(.34,1.56,.64,1); }
+  .tile .followed-badge { top:12px; right:10px; width:16px; height:16px; }
+  /* Following selector */
+  .f-picker { display:flex; gap:10px; overflow-x:auto; padding:4px 20px 14px; scrollbar-width:none; }
+  .f-picker::-webkit-scrollbar { display:none; }
+  .f-item { flex:0 0 auto; max-width:160px; padding:10px 14px; border-radius:14px; border:1px solid var(--border); background:var(--bg); color:var(--fg);
+            text-align:left; cursor:pointer; font-family:inherit; transition:background .2s, color .2s, transform .15s; }
+  .f-item:active { transform:scale(.96); }
+  .f-item b { display:block; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .f-item span { font-size:11px; color:var(--muted); }
+  .f-item.on { background:var(--fg); color:var(--bg); border-color:var(--fg); }
+  .f-item.on span { color:inherit; opacity:.7; }
+  .f-detail { padding:0 20px 40px; }
+  /* Launch animation: logo breathes in, then zooms through the screen (like X). */
+  .splash { position:absolute; inset:0; z-index:50; background:var(--bg); display:grid; place-items:center; pointer-events:none;
+            animation:splash-out .45s ease .98s forwards; }
+  .splash .brand { font-size:64px; animation:logo-zoom 1.1s cubic-bezier(.7,0,.84,0) .3s forwards; }
+  .splash .bang { animation:none; opacity:1; transform:none; }
+  @keyframes logo-zoom { 0% { transform:scale(1); } 35% { transform:scale(.88); } 100% { transform:scale(16); opacity:0; } }
+  @keyframes splash-out { to { opacity:0; visibility:hidden; } }
+</style>
+</head>
+<body>
+<div class="devices" id="devices">
+  <button data-device="phone" class="on">Móvil</button>
+  <button data-device="tablet">Tablet</button>
+  <button data-device="duo">Doble pantalla</button>
+</div>
+<div class="phone" id="phone"><div class="stage-area" id="stage"></div><nav class="tabbar" id="tabbar"></nav></div>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="ptrGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9500"/><stop offset="1" stop-color="#ff3b30"/></linearGradient></defs></svg>
+<script>
+const LABELS = { confirmed:'Confirmado', developing:'En desarrollo', uncertain:'Incierto' };
+const CATEGORIES = [['politica','Política'],['conflictos','Conflictos'],['economia','Economía'],['sucesos','Sucesos'],['sociedad','Sociedad'],['tecnologia','Tecnología'],['deportes','Deportes']];
+const catLabel = id => (CATEGORIES.find(c => c[0] === id) || [, id])[1];
+const TOGGLES = [
+  ['notifyFollowed', 'Auges que sigo', 'Cuando algo cambie o se confirme.'],
+  ['notifyBreaking', 'Última hora', 'Solo lo más importante del mundo.'],
+  ['notifyDigest', 'Resumen diario', 'Cada mañana, el mundo en 30 segundos.'],
+  ['quietHours', 'No molestar de noche', 'Sin avisos de 23:00 a 08:00.'],
+];
+const TOP = 7;
+const store = {
+  get(k, def) { try { return JSON.parse(localStorage.getItem('auge-' + k)) ?? def; } catch { return def; } },
+  set(k, v) { try { localStorage.setItem('auge-' + k, JSON.stringify(v)); } catch {} },
+};
+const prefs = { categories: [], notifyFollowed: true, notifyBreaking: true, notifyDigest: false, quietHours: true, ...store.get('prefs', {}) };
+const followed = new Set(store.get('followed', []));
+const inbox = [];
+let STORIES = [];
+let device = 'phone';
+let selected = null;
+const timeAgo = d => { const m = Math.round((Date.now() - d) / 60000); return m < 60 ? `${m} min` : `${Math.round(m / 60)} h`; };
+const phone = document.getElementById('phone');
+const stageEl = document.getElementById('stage');
+const d = ms => `style="animation-delay:${ms}ms"`;
+const byId = id => STORIES.find(s => s.id === id);
+const topStories = () => STORIES.filter(s => !prefs.categories.length || prefs.categories.includes(s.category)).slice(0, TOP);
+const wide = () => device !== 'phone';
+
+let dark = store.get('theme', null) ? store.get('theme') === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+const applyTheme = () => phone.classList.toggle('dark', dark);
+
+// Notifications: inbox + in-app banner standing in for the OS push.
+let toastTimer;
+function notify(title, body, storyId) {
+  inbox.unshift({ title, body, storyId, at: new Date(), read: false });
+  refreshBell();
+  const h = new Date().getHours();
+  if (prefs.quietHours && (h >= 23 || h < 8)) return;
+  let t = phone.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; stageEl.appendChild(t); }
+  t.innerHTML = `<b>${title}</b>${body}`;
+  t.onclick = () => { t.classList.remove('show'); if (storyId) openStory(storyId); };
+  requestAnimationFrame(() => t.classList.add('show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+}
+const unread = () => inbox.filter(i => !i.read).length;
+const refreshBell = () => document.getElementById('tabbar') && renderTabs();
+
+function toggleFollow(id) {
+  if (followed.has(id)) followed.delete(id);
+  else {
+    followed.add(id);
+    const s = byId(id);
+    const pending = s.facts.filter(f => f.certainty !== 'confirmed').length;
+    if (prefs.notifyFollowed) notify(`Sigues #${s.tag}`, pending ? `Te avisaremos de ${pending} punto${pending > 1 ? 's' : ''} aún sin confirmar.` : 'Te avisaremos si hay cambios importantes.', id);
+  }
+  store.set('followed', [...followed]);
+}
+
+// Minimal page stack mirroring the app's router with slide transitions.
+const stack = [];
+function push(render) {
+  const v = document.createElement('div');
+  v.className = 'view';
+  v.render = render;
+  render(v);
+  stageEl.appendChild(v);
+  stack.at(-1)?.classList.replace('current', 'under');
+  stack.push(v);
+  requestAnimationFrame(() => requestAnimationFrame(() => v.classList.add('current')));
+  renderTabs();
+}
+function pop() {
+  if (stack.length < 2) return;
+  const v = stack.pop();
+  v.classList.remove('current');
+  const t = stack.at(-1);
+  t.render(t);  // refresh (e.g. follow count changed)
+  t.classList.replace('under', 'current');
+  setTimeout(() => v.remove(), 400);
+  renderTabs();
+}
+function reset(root = feedView) {
+  stack.splice(0).forEach(v => v.remove());
+  push(root);
+  renderTabs();
+}
+
+// Bottom tab bar: the five root screens. Detail screens hide it.
+// Thin outline icons like X's tab bar (Lucide paths, ISC). Idle: 1.75 stroke. Active: filled, or bolder when not fillable.
+const ICON_PATHS = {
+  auge: [['M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z'], true],
+  explore: [['M11 3a8 8 0 1 0 0 16 8 8 0 0 0 0-16z', 'm21 21-4.3-4.3'], false],
+  following: [['m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z'], true],
+  alerts: [['M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9', 'M10.3 21a1.94 1.94 0 0 0 3.4 0'], true],
+  person: [['M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2', 'M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z'], true],
+};
+const icon = (name, active = false) => { const [d, fillable] = ICON_PATHS[name];
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${active && !fillable ? 2.6 : 1.75}" stroke-linecap="round" stroke-linejoin="round">${d.map((p, i) => `<path d="${p}" fill="${active && fillable && i === 0 ? 'currentColor' : 'none'}"/>`).join('')}</svg>`; };
+const ICONS = { auge: icon('auge', true) };
+const TABS = [['auge', () => feedView], ['explore', () => exploreView], ['following', () => followingView], ['alerts', () => notificationsView], ['person', () => profileView]];
+let tab = 'auge';
+function renderTabs() {
+  const bar = document.getElementById('tabbar');
+  bar.classList.toggle('hidden', stack.length > 1);
+  bar.innerHTML = TABS.map(([id]) => `<button data-tab="${id}" class="${tab === id ? 'on' : ''}" aria-label="${id}">
+    ${id === 'person' && user ? avatar(user.avatarId, 28) : icon(id, tab === id)}${id === 'alerts' && unread() ? '<span class="tab-dot"></span>' : ''}</button>`).join('');
+  bar.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
+    if (b.dataset.tab === tab && stack.length === 1) return;
+    tab = b.dataset.tab;
+    reset(TABS.find(t => t[0] === tab)[1]());
+  });
+}
+function openStory(id) {
+  if (wide() && stack.length === 1) { selected = id; stack[0].render(stack[0]); }
+  else push(storyView(id));
+}
+const topbar = (title = '', right = '', back = true) => `
+  <div class="topbar">${back ? '<button class="icon-btn" data-back>←</button>' : ''}${title ? `<div class="topbar-title">${title}</div>` : ''}${right}</div>`;
+const wire = v => {
+  v.querySelectorAll('[data-back]').forEach(b => b.onclick = pop);
+  v.querySelectorAll('[data-story]').forEach(b => b.onclick = () => openStory(b.dataset.story));
+};
+const factsHtml = (facts, base) => facts.map((f, i) => `
+  <div class="fact rise" ${d(base + i * 80)}><div class="bar ${f.certainty}"></div>
+    <div><div class="badge ${f.certainty}">${LABELS[f.certainty]}</div><p>${f.text}</p></div></div>`).join('');
+const sourcesHtml = (sources, base) => sources.map((s, i) =>
+  `<a class="source rise" ${d(base + i * 60)} href="${s.url}" target="_blank" rel="noopener">${s.name}<span>↗</span></a>`).join('');
+const socialHtml = (s, base) => `
+  <div class="section rise" ${d(base - 40)}>PULSO EN REDES</div>
+  <div class="pulse-mood rise" ${d(base - 20)}>${s.pulse.mood}</div>
+  ${s.pulse.networks.map((n, i) => `<div class="pulse-row rise" ${d(base + i * 40)}><span class="pulse-name">${n.name}</span><div class="track"><div class="fill" style="width:${n.volume}%;animation-delay:${base + 80 + i * 60}ms"></div></div><span class="pulse-val">${n.volume}</span></div>`).join('')}
+  <div class="section rise" ${d(base)}>EN REDES</div>
+  <div class="chips rise" ${d(base + 20)}>${s.topics.map(t => `<span class="chip">${t}</span>`).join('')}</div>
+  ${(s.posts || []).map((p, i) => `<div class="post rise" ${d(base + 60 + i * 60)}><div class="post-head"><b>${p.author}</b>${p.handle} · ${p.platform}</div><p>${p.text}</p></div>`).join('')}
+  <div class="disclaimer">Pulso, publicaciones y bulos son simulados hasta conectar las APIs de redes.</div>`;
+
+const BOOKMARK = '<svg class="followed-badge" viewBox="0 0 24 24" fill="currentColor" aria-label="Siguiendo"><path d="M17 3H7a2 2 0 0 0-2 2v16l7-3 7 3V5a2 2 0 0 0-2-2z"/></svg>';
+const badge = id => followed.has(id) ? BOOKMARK : '';
+const VERDICTS = { contradicted:'Falso', unproven:'Sin pruebas', consistent:'Coincide' };
+const lastVisit = new Date(store.get('lastVisit', Date.now() - 6 * 3600000));
+store.set('lastVisit', Date.now());
+let showChanges = true;
+const changes = () => STORIES.flatMap(s => s.timeline.filter(t => t.at > lastVisit).map(t => ({ story: s, ...t }))).sort((a, b) => b.at - a.at);
+
+const mediaHtml = (s, base) => s.media.length ? `
+  <div class="section rise" ${d(base)}>FOTOS Y VÍDEOS · ${s.media.length}</div>
+  <div class="gallery rise" ${d(base + 20)}>${s.media.map((m, i) => m.type === 'image'
+    ? `<button class="media-tile" data-media="${i}"><img src="${m.url}" alt="${m.caption}" loading="lazy"></button>`
+    : `<button class="media-tile media-video" data-media="${i}"><span class="play">▶</span><small>${m.source}</small></button>`).join('')}</div>
+  <div class="disclaimer">Imágenes de contexto con licencia libre, no del suceso. Los vídeos abren el medio original.</div>` : '';
+const claimsHtml = (s, base) => s.claims.length ? `
+  <div class="section rise" ${d(base)}>LA RED VS. LOS HECHOS</div>
+  ${s.claims.map((c, i) => `<div class="claim rise" ${d(base + 20 + i * 60)}><div class="claim-text">«${c.claim.replace(/[«»]/g, '')}»</div>
+    <div class="claim-verdict"><span class="verdict ${c.verdict}">${VERDICTS[c.verdict]}</span>${c.note}</div></div>`).join('')}` : '';
+const timelineHtml = (s, base) => s.timeline.length ? `
+  <div class="section rise" ${d(base)}>CRONOLOGÍA</div>
+  <div class="tl">${s.timeline.map((t, i) => `<div class="tl-item rise ${i === s.timeline.length - 1 ? 'now' : ''}" ${d(base + 20 + i * 50)}>
+    <div class="meta" style="margin:0">hace ~${timeAgo(t.at)}</div><p>${t.text}</p></div>`).join('')}</div>` : '';
+
+function openLightbox(s, index) {
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  stageEl.appendChild(lb);
+  let i = index;
+  const render = () => {
+    const m = s.media[i];
+    lb.innerHTML = `<div class="lb-bar"><button class="lb-close" data-close aria-label="Cerrar">✕</button><span class="lb-count">${i + 1} / ${s.media.length}</span></div>
+      <div class="stage">${m.type === 'image' ? `<img src="${m.url}" alt="${m.caption}">` : `<div style="text-align:center"><div style="font-size:56px">▶</div><b>${m.title}</b></div>`}</div>
+      ${s.media.length > 1 ? '<button class="nav prev" aria-label="Anterior">‹</button><button class="nav next" aria-label="Siguiente">›</button>' : ''}
+      <div class="cap">${m.type === 'image' ? `<b>${m.caption}</b><small>Foto: ${m.credit} · ${m.license} · Wikimedia Commons</small><a href="${m.page}" target="_blank" rel="noopener">Ver original ↗</a>`
+        : `<small>Vídeo de ${m.source}</small><a href="${m.url}" target="_blank" rel="noopener">Ver en ${m.source} ↗</a>`}</div>`;
+    lb.querySelector('[data-close]').onclick = close;
+    lb.querySelector('.prev')?.addEventListener('click', () => go(-1));
+    lb.querySelector('.next')?.addEventListener('click', () => go(1));
+  };
+  const go = step => {
+    const n = i + step;
+    if (n < 0 || n >= s.media.length) return;
+    const img = lb.querySelector('.stage > *');
+    img.style.opacity = 0; img.style.transform = `translateX(${-step * 60}px)`;
+    setTimeout(() => { i = n; render(); const el = lb.querySelector('.stage > *'); el.style.opacity = 0; el.style.transform = `translateX(${step * 60}px)`;
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = 1; el.style.transform = ''; })); }, 160);
+  };
+  const close = () => { lb.classList.remove('show'); setTimeout(() => lb.remove(), 250); removeEventListener('keydown', key); };
+  const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); };
+  addEventListener('keydown', key);
+  let sx = null;
+  lb.addEventListener('pointerdown', e => sx = e.clientX);
+  lb.addEventListener('pointerup', e => { if (sx !== null && Math.abs(e.clientX - sx) > 50) go(e.clientX < sx ? 1 : -1); sx = null; });
+  render();
+  requestAnimationFrame(() => lb.classList.add('show'));
+}
+
+// "El mundo en 60 segundos" with the browser voice (the app uses the device TTS).
+let speaking = false;
+function toggleBrief(btn) {
+  if (speaking) { speechSynthesis.cancel(); speaking = false; btn.textContent = '▶ Escuchar 60 s'; return; }
+  const date = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+  const u = new SpeechSynthesisUtterance([`Esto es Auge. ${date}. Lo que está en auge en el mundo.`, ...topStories().map((s, i) => `${i + 1}. ${s.tag}. ${s.brief}`), 'Estás al día.'].join(' '));
+  u.lang = 'es-ES'; u.rate = 1.05;
+  u.onend = () => { speaking = false; btn.textContent = '▶ Escuchar 60 s'; };
+  speechSynthesis.speak(u);
+  speaking = true; btn.textContent = '❚❚ Pausar';
+}
+
+// Branded share card drawn on a canvas (the app snapshots a native view instead).
+async function shareCard(s) {
+  const W = 1080, H = 1350, c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+  const font = (w, px) => `${w} ${px}px -apple-system, "Segoe UI", Inter, sans-serif`;
+  g.fillStyle = '#8f8f8f'; g.font = font(700, 30);
+  g.fillText(new Date().toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' }).toUpperCase(), 90, 150);
+  g.fillStyle = '#fff'; g.font = font(900, 130); g.fillText('Auge', 84, 290);
+  const w = g.measureText('Auge').width;
+  const grad = g.createLinearGradient(0, 180, 0, 300); grad.addColorStop(0, '#ff9500'); grad.addColorStop(1, '#ff3b30');
+  g.fillStyle = grad; g.fillText('!', 92 + w, 290);
+  const wrap = (text, x, y, max, lh) => { let line = ''; for (const word of text.split(' ')) { const t = line + word + ' '; if (g.measureText(t).width > max && line) { g.fillText(line, x, y); line = word + ' '; y += lh; } else line = t; } g.fillText(line, x, y); return y; };
+  g.fillStyle = '#fff'; g.font = font(800, 76);
+  let y = wrap('#' + s.tag, 90, 520, 900, 90);
+  g.fillStyle = '#d4d4d4'; g.font = font(400, 44);
+  y = wrap(s.brief, 90, y + 90, 900, 60);
+  g.fillStyle = '#1c1c1c'; g.fillRect(90, y + 70, 900, 10);
+  const bar = g.createLinearGradient(90, 0, 990, 0); bar.addColorStop(0, '#ff3b30'); bar.addColorStop(1, '#ff9500');
+  g.fillStyle = bar; g.fillRect(90, y + 70, 900 * s.heat / 100, 10);
+  const n = c2 => s.facts.filter(x => x.certainty === c2).length;
+  g.fillStyle = '#8f8f8f'; g.font = font(500, 32);
+  g.fillText(`${n('confirmed')} confirmado · ${n('developing')} en desarrollo · ${n('uncertain')} incierto`, 90, y + 150);
+  g.fillStyle = '#ff3b30'; g.font = font(700, 34); g.fillText('augeapp · el mundo en 30 segundos', 90, H - 110);
+  const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+  const file = new File([blob], `auge-${s.id}.png`, { type: 'image/png' });
+  try {
+    if (navigator.canShare?.({ files: [file] })) return await navigator.share({ files: [file], text: `#${s.tag} — ${s.brief}` });
+  } catch { return; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+  notify('Tarjeta descargada', 'Lista para subir a Stories, X o WhatsApp.');
+}
+
+// Free avatar collection (mirrors src/app/core/avatars.ts).
+const AVATARS = [
+  ['fox','🦊','#ff3b30','#ff9500'], ['cat','🐱','#0a0a0a','#3a3a3a'], ['panda','🐼','#ffffff','#e5e5e5'], ['octopus','🐙','#ff9500','#ffcc00'],
+  ['frog','🐸','#16a34a','#86efac'], ['penguin','🐧','#1f2937','#ff3b30'], ['owl','🦉','#7c2d12','#ff9500'], ['koala','🐨','#e5e5e5','#a3a3a3'],
+  ['tiger','🐯','#ff3b30','#0a0a0a'], ['bunny','🐰','#fecaca','#ff3b30'], ['bear','🐻','#78350f','#d97706'], ['unicorn','🦄','#f0abfc','#ff9500'],
+  ['whale','🐳','#0ea5e9','#0a0a0a'], ['chick','🐥','#fde047','#ff9500'], ['alien','👽','#0a0a0a','#16a34a'], ['robot','🤖','#a3a3a3','#ff3b30'],
+].map(([id, face, from, to]) => ({ id, face, from, to }));
+const avatar = (id, size) => { const a = AVATARS.find(x => x.id === id) || AVATARS[0];
+  return `<span class="av" style="width:${size}px;height:${size}px;font-size:${Math.round(size * .52)}px;background:linear-gradient(135deg,${a.from},${a.to})">${a.face}</span>`; };
+
+// Preview auth: same flows as the app, stored only in this browser. The app talks to Supabase.
+let user = store.get('user', null);
+const saveUser = u => { user = u; store.set('user', u); };
+const PROVIDERS = { google:'Google', apple:'Apple' };
+const USERNAME_RE = /^[a-z0-9_.]{3,20}$/;
+const G_ICON = '<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6h-4a12 12 0 0 0 0 10.8l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z"/></svg>';
+const A_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM13.9 5.1c.7-.9 1.2-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>';
+const PHONE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>';
+
+function loginView(v, step = 'choose') {
+  const done = () => { if (!user.username) { v.render = editProfileView; editProfileView(v); } else if (stack.length > 1) pop(); else { v.render = profileView; profileView(v); renderTabs(); } };
+  const signIn = (provider, fullName) => { saveUser({ id:'preview', fullName, username:'', avatarId:AVATARS[Math.floor(Math.random() * AVATARS.length)].id, provider, since:Date.now() }); done(); };
+  const body = {
+    choose: `<button class="auth-btn auth-apple rise" ${d(160)} data-p="apple">${A_ICON}Continuar con Apple</button>
+      <button class="auth-btn rise" ${d(220)} data-p="google">${G_ICON}Continuar con Google</button>
+`,
+  }[step];
+  v.innerHTML = `<div class="login">
+    <button class="skip" data-back>Ahora no</button>
+    <div class="login-body">
+      <div class="brand rise">${[...'Auge'].map((c, i) => `<span class="l" style="animation-delay:${i * 60}ms">${c}</span>`).join('')}<span class="l bang">!</span></div>
+      <div class="login-tagline rise" ${d(80)}>El mundo en 30 segundos. Sigue tus auges y recibe avisos cuando cambien.</div>
+      ${body}
+    </div>
+    <div class="login-foot">Vista previa: la sesión solo se guarda en este navegador.<br>Al continuar aceptas los Términos y la Política de privacidad.</div>
+  </div>`;
+  v.querySelector('[data-back]').onclick = () => stack.length > 1 ? pop() : (tab = 'auge', reset(feedView));
+  v.querySelectorAll('[data-p]').forEach(b => b.onclick = () => signIn(b.dataset.p, b.dataset.p === 'google' ? 'Usuario de Google' : 'Usuario de Apple'));
+}
+
+function profileView(v) {
+  if (!user) { v.render = loginView; return loginView(v); }
+  const since = new Date(user.since).toLocaleDateString('es-ES', { month:'long', year:'numeric' });
+  v.innerHTML = `<div class="tab-title">Perfil<button class="icon-btn" id="settings" aria-label="Ajustes">⚙︎</button></div>
+    <div class="detail">
+      <div class="profile-head rise"><button class="av-btn" id="edit-av">${avatar(user.avatarId, 84)}</button>
+        <div><div class="title">${user.fullName || 'Sin nombre'}</div><div class="handle">@${user.username || 'elige-tu-usuario'}</div>
+          <div class="meta">Con ${PROVIDERS[user.provider]} · desde ${since}</div>
+          <div class="pills"><button class="plan-pill" id="edit">Editar perfil</button></div></div></div>
+      <div class="stats rise" ${d(80)}><div><b>${followed.size}</b><span>Siguiendo</span></div><div><b>${prefs.categories.length || 'Todos'}</b><span>Temas</span></div><div><b>${inbox.length}</b><span>Avisos</span></div></div>
+      <div class="section rise" ${d(140)}>TUS TEMAS</div>
+      <div class="chips rise" ${d(160)}>${prefs.categories.length ? prefs.categories.map(c => `<span class="chip on">${catLabel(c)}</span>`).join('') : '<span class="chip">Todos los temas</span>'}</div>
+      <div class="section rise" ${d(200)}>CUENTA</div>
+      <div class="row rise" ${d(220)} data-go="following"><div class="row-label">Auges que sigo</div><span class="chev">›</span></div>
+      <div class="row rise" ${d(260)} data-go="notifications"><div class="row-label">Notificaciones</div><span class="chev">›</span></div>
+      <div class="row rise" ${d(300)} data-go="settings"><div class="row-label">Ajustes</div><span class="chev">›</span></div>      <button class="danger" id="logout">Cerrar sesión</button>
+    </div>`;
+  v.querySelectorAll('[data-back]').forEach(b => b.onclick = pop);
+  const views = { following:followingView, notifications:notificationsView, settings:settingsView };
+  v.querySelectorAll('[data-go]').forEach(r => r.onclick = () => push(views[r.dataset.go]));
+  v.querySelector('#settings').onclick = () => push(settingsView);
+  v.querySelector('#edit').onclick = v.querySelector('#edit-av').onclick = () => push(editProfileView);
+  v.querySelector('#logout').onclick = () => { if (confirm('¿Cerrar sesión?')) { saveUser(null); v.render = loginView; loginView(v); renderTabs(); } };
+}
+
+function editProfileView(v) {
+  const setup = !user.username;
+  let draft = { avatarId:user.avatarId, fullName:user.fullName, username:user.username };
+  v.innerHTML = `${topbar(setup ? 'Crea tu perfil' : 'Editar perfil', '<div style="flex:1"></div><button class="save" id="save">Guardar</button>', !setup)}
+    <div class="detail">
+      <div class="edit-preview" id="preview"></div>
+      <div class="section rise" ${d(60)}>TU FOTO</div>
+      <div class="hint">Colección Auge, gratis. Elige la tuya.</div>
+      <div class="av-grid rise" ${d(100)}>${AVATARS.map(a => `<button class="av-option ${a.id === draft.avatarId ? 'on' : ''}" data-av="${a.id}" aria-label="${a.id}">${avatar(a.id, 58)}</button>`).join('')}</div>
+      <div class="section rise" ${d(160)}>NOMBRE COMPLETO</div>
+      <input class="auth-input" id="name" maxlength="50" placeholder="Cómo te verán" value="${draft.fullName}">
+      <div class="section rise" ${d(200)}>@USUARIO</div>
+      <label class="handle-input"><span>@</span><input id="user" maxlength="20" placeholder="tu_usuario" autocapitalize="none" spellcheck="false" value="${draft.username}"></label>
+      <div class="disclaimer">3–20 caracteres: letras, números, _ y .</div>
+      <div class="form-error" id="err"></div>
+    </div>`;
+  const preview = () => {
+    v.querySelector('#preview').innerHTML = `${avatar(draft.avatarId, 104)}<div class="title">${draft.fullName || 'Tu nombre'}</div><div class="handle">@${draft.username || 'usuario'}</div>`;
+    v.querySelector('#save').disabled = !(draft.fullName.trim() && USERNAME_RE.test(draft.username));
+  };
+  preview();
+  v.querySelectorAll('[data-back]').forEach(b => b.onclick = pop);
+  v.querySelectorAll('[data-av]').forEach(b => b.onclick = () => {
+    draft.avatarId = b.dataset.av;
+    v.querySelectorAll('.av-option').forEach(x => x.classList.toggle('on', x === b));
+    preview();
+  });
+  v.querySelector('#name').oninput = e => { draft.fullName = e.target.value; v.querySelector('#err').textContent = ''; preview(); };
+  v.querySelector('#user').oninput = e => {
+    e.target.value = e.target.value.toLowerCase().replace(/^@/, '').replace(/[^a-z0-9_.]/g, '');
+    draft.username = e.target.value; v.querySelector('#err').textContent = ''; preview();
+  };
+  v.querySelector('#save').onclick = () => {
+    if (!draft.fullName.trim()) return v.querySelector('#err').textContent = 'Escribe tu nombre.';
+    if (!USERNAME_RE.test(draft.username)) return v.querySelector('#err').textContent = 'El @usuario debe tener 3–20 letras, números, _ o .';
+    saveUser({ ...user, ...draft, fullName:draft.fullName.trim() });
+    notify('Perfil guardado', `Ya eres @${draft.username}.`);
+    if (stack.length > 1) pop(); else { v.render = profileView; profileView(v); renderTabs(); }
+  };
+}
+
+function feedList(firstPaint, animateCards = firstPaint) {
+  const date = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' }).toUpperCase();
+  const list = topStories();
+  const current = selected ?? list[0]?.id;
+  return `
+    <div class="ptr"><div class="ptr-ball"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></div></div>
+    <div class="scroller-content">
+    ${justUpdated ? '<div class="updated">Actualizado ahora</div>' : ''}
+    <div class="header">
+      <div>
+        <div class="eyebrow">${date}</div>
+        <div class="brand" role="heading" aria-label="Auge!">${firstPaint
+          ? [...'Auge'].map((c, i) => `<span class="l" style="animation-delay:${i * 60}ms">${c}</span>`).join('') + '<span class="l bang">!</span>'
+          : 'Auge<span class="l bang" style="animation:sway 4.2s ease-in-out infinite;opacity:1">!</span>'}</div>
+      </div>
+    </div>
+
+    <div class="live"><span class="dot"></span>En auge ahora<button class="listen" id="listen">${speaking ? '❚❚ Pausar' : '▶ Escuchar 60 s'}</button></div>
+    ${showChanges && changes().length ? `<div class="changes ${firstPaint ? 'rise' : ''}" ${d(80)}>
+      <div class="changes-head"><span>¿QUÉ CAMBIÓ? · ${changes().length} desde tu última visita</span><button id="hide-changes" aria-label="Ocultar">✕</button></div>
+      ${changes().slice(0, 4).map(c => `<div class="change" data-story="${c.story.id}"><b>#${c.story.tag}</b>${c.text}</div>`).join('')}</div>` : ''}
+    ${list.map((s, i) => `
+      <div class="card ${animateCards ? 'rise' : ''} ${wide() && s.id === current ? 'on' : ''}" ${d(120 + i * 90)} data-story="${s.id}">${badge(s.id)}
+        <div class="rank">${i + 1}</div>
+        <div>
+          <div class="tag">#${s.tag}</div>
+          <div class="brief">${s.brief}</div>
+          <div class="track"><div class="fill" style="width:${s.heat}%;animation-delay:${300 + i * 90}ms"></div></div>
+          <div class="meta">${s.region} · ${s.clustered} fuentes agrupadas · ${timeAgo(s.updatedAt)}</div>
+        </div>
+      </div>`).join('') || '<div class="end">Nada en auge en tus temas ahora mismo. Cambia tus temas en Perfil → Ajustes.</div>'}
+    <button class="see-all" id="see-all">Ver todos los auges →</button>
+    </div>`;
+}
+
+// Pull to refresh: drag (touch or mouse) or scroll up past the top.
+let justUpdated = false;
+const PULL_MAX = 110, PULL_TRIGGER = 70;
+function attachPull(scroller, view) {
+  const ptr = scroller.querySelector('.ptr'), ball = ptr.querySelector('.ptr-ball');
+  const content = scroller.querySelector('.scroller-content'), circle = ptr.querySelector('circle');
+  let startY = null, dist = 0, busy = false, wheelTimer;
+  const set = px => {
+    dist = Math.max(0, Math.min(PULL_MAX, px));
+    const p = dist / PULL_TRIGGER;
+    content.style.transform = dist ? `translateY(${dist * 0.6}px)` : '';
+    ball.style.opacity = Math.min(1, p);
+    ball.style.transform = `translateY(${dist * 0.9}px) rotate(${dist * 4}deg) scale(${0.6 + Math.min(p, 1) * 0.4})`;
+    circle.style.strokeDashoffset = 56 - Math.min(p, 1) * 44;
+  };
+  const release = async () => {
+    scroller.classList.remove('pulled');
+    if (dist > 4) scroller.addEventListener('click', e => e.stopPropagation(), { capture: true, once: true });
+    if (dist < PULL_TRIGGER || busy) return set(0);
+    busy = true;
+    set(PULL_TRIGGER);
+    circle.style.strokeDashoffset = '';
+    ptr.classList.add('spinning');
+    await Promise.all([loadStories(), new Promise(r => setTimeout(r, 1100))]);
+    justUpdated = true;
+    view.render(view);
+  };
+  scroller.addEventListener('pointerdown', e => { if (scroller.scrollTop <= 0 && !busy) startY = e.clientY; });
+  scroller.addEventListener('pointermove', e => {
+    if (startY === null) return;
+    const dy = e.clientY - startY;
+    if (dy > 4) { scroller.classList.add('pulled'); set(dy * 0.55); }
+  });
+  addEventListener('pointerup', () => { if (startY !== null) { startY = null; release(); } });
+  scroller.addEventListener('wheel', e => {
+    if (scroller.scrollTop > 0 || e.deltaY >= 0 || busy) return;
+    scroller.classList.add('pulled');
+    set(dist - e.deltaY * 0.35);
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(release, 160);
+  }, { passive: true });
+}
+
+function feedView(v) {
+  const firstPaint = !v.dataset.painted;
+  v.dataset.painted = '1';
+  const animateCards = firstPaint || justUpdated;
+  if (wide()) {
+    const current = selected ?? topStories()[0]?.id;
+    v.innerHTML = `<div class="split"><div class="pane pane-left">${feedList(firstPaint, animateCards)}</div>${device === 'duo' ? '<div class="hinge"></div>' : ''}<div class="pane" id="pane"></div></div>`;
+    const pane = v.querySelector('#pane');
+    if (current) storyView(current, false)(pane);
+  } else {
+    v.innerHTML = feedList(firstPaint, animateCards);
+  }
+  justUpdated = false;
+  attachPull(wide() ? v.querySelector('.pane-left') : v, v);
+  wire(v);
+
+  v.querySelector('#listen').onclick = e => toggleBrief(e.currentTarget);
+  v.querySelector('#hide-changes')?.addEventListener('click', e => { e.stopPropagation(); showChanges = false; v.querySelector('.changes').remove(); });
+  v.querySelector('#see-all').onclick = () => { tab = 'explore'; reset(exploreView); };
+}
+
+const storyView = (id, back = true) => v => {
+  const s = byId(id);
+  const on = followed.has(id);
+  v.innerHTML = `
+    ${topbar('', `<div style="flex:1"></div><button class="icon-btn share" data-share aria-label="Compartir">↗︎</button><button class="pill ${on ? 'on' : ''}" data-follow>${on ? 'Siguiendo' : 'Seguir'}</button>`, back)}
+    <div class="detail">
+      <div class="cat rise">${catLabel(s.category).toUpperCase()}</div>
+      <div class="title rise">#${s.tag}</div>
+      <div class="meta rise" ${d(60)}>${s.region} · Actualizado hace ${timeAgo(s.updatedAt)}</div>
+      <div class="track big rise" ${d(100)}><div class="fill" style="width:${s.heat}%;animation-delay:250ms"></div></div>
+      <div class="lead rise" ${d(140)}>${s.brief}</div>
+      ${mediaHtml(s, 170)}
+      <div class="section rise" ${d(200)}>EL INFORME</div>
+      ${factsHtml(s.facts, 260)}
+      ${claimsHtml(s, 400)}
+      ${timelineHtml(s, 440)}
+      ${socialHtml(s, 480)}
+      <div class="section rise" ${d(700)}>FUENTES · ${s.clustered} artículos agrupados</div>
+      ${sourcesHtml(s.sources, 740)}
+    </div>`;
+  if (back) wire(v);
+  v.querySelectorAll('[data-media]').forEach(b => b.onclick = () => openLightbox(s, +b.dataset.media));
+  v.querySelector('[data-share]').onclick = () => shareCard(s);
+  v.querySelector('[data-share-text]')?.addEventListener('click', async () => {
+    const text = `#${s.tag} — ${s.brief}
+
+Visto en Auge!`;
+    try { if (navigator.share) await navigator.share({ title: 'Auge!', text, url: s.sources[0]?.url }); else { await navigator.clipboard.writeText(text + ' ' + (s.sources[0]?.url || '')); notify('Copiado', 'Listo para pegar en X, Instagram o WhatsApp.'); } } catch {}
+  });
+  const f = v.querySelector('[data-follow]');
+  f.onclick = () => {
+    toggleFollow(id);
+    f.classList.toggle('on', followed.has(id));
+    f.textContent = followed.has(id) ? 'Siguiendo' : 'Seguir';
+  };
+};
+
+let exploreCat = null;
+function exploreView(v) {
+  const list = STORIES.filter(s => !exploreCat || s.category === exploreCat);
+  v.innerHTML = `
+    <div class="tab-title">Todos los auges</div>
+    <div class="legend rise">${ICONS.auge}<div><b>Índice de auge, de 0 a 100</b><span>Cuánto crece un tema ahora en medios y redes. 100 = lo que más arde.</span></div></div>
+    <div class="filters"><button class="chip ${!exploreCat ? 'on' : ''}" data-cat="">Todos</button>${CATEGORIES.map(([id, label]) => `<button class="chip ${exploreCat === id ? 'on' : ''}" data-cat="${id}">${label}</button>`).join('')}</div>
+    <div class="grid">
+      ${list.map((s, i) => `
+        <div class="tile rise" ${d(i * 40)} data-story="${s.id}">${badge(s.id)}
+          <div class="tile-num"><span class="tile-heat" style="opacity:${(0.35 + s.heat / 150).toFixed(2)}">${s.heat}</span><small>/100</small></div>
+          <div class="track"><div class="fill" style="width:${s.heat}%;animation-delay:${200 + i * 40}ms"></div></div>
+          <div class="tile-tag">#${s.tag}</div>
+          <div class="tile-region">${s.region}</div>
+        </div>`).join('') || '<div class="end" style="grid-column:1/-1">Nada en auge en este tema ahora mismo.</div>'}
+    </div>`;
+  v.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { exploreCat = b.dataset.cat || null; exploreView(v); });
+  v.querySelectorAll('[data-back]').forEach(b => b.onclick = pop);
+  v.querySelectorAll('[data-story]').forEach(b => b.onclick = () => push(storyView(b.dataset.story)));
+}
+
+// One followed auge at a time: pick it from the strip, see everything about it below.
+let followingSel = null;
+function followingView(v) {
+  const list = STORIES.filter(s => followed.has(s.id));
+  if (!list.some(s => s.id === followingSel)) followingSel = list[0]?.id ?? null;
+  const s = byId(followingSel);
+  v.innerHTML = `
+    <div class="tab-title">Siguiendo</div>
+    ${list.length ? `
+      <div class="f-picker">${list.map((x, i) => `<button class="f-item rise ${x.id === followingSel ? 'on' : ''}" ${d(i * 50)} data-pick="${x.id}"><b>#${x.tag}</b><span>${x.heat}/100 · hace ${timeAgo(x.updatedAt)}</span></button>`).join('')}</div>
+      <div class="f-detail" id="f-detail">
+        <div class="followed-head rise"><div class="title" style="font-size:24px">#${s.tag}</div><button class="unfollow" data-unfollow="${s.id}">Dejar de seguir</button></div>
+        <div class="meta rise" ${d(40)}>${s.region} · ${s.clustered} fuentes · hace ${timeAgo(s.updatedAt)}</div>
+        <div class="lead rise" ${d(80)}>${s.brief}</div>
+        ${mediaHtml(s, 120)}
+        <div class="section rise" ${d(160)}>EL INFORME</div>
+        ${factsHtml(s.facts, 180)}
+        ${claimsHtml(s, 300)}
+        ${timelineHtml(s, 340)}
+        ${socialHtml(s, 420)}
+        <div class="section">FUENTES</div>
+        ${sourcesHtml(s.sources, 0)}
+      </div>` : `
+      <div class="detail"><div class="empty rise"><div class="lead">Aún no sigues ningún auge.</div>Pulsa «Seguir» en un auge y aquí lo verás con todo: informe, fotos, redes y fuentes.</div></div>`}`;
+  wire(v);
+  v.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { followingSel = b.dataset.pick; followingView(v); });
+  v.querySelectorAll('[data-unfollow]').forEach(b => b.onclick = () => { toggleFollow(b.dataset.unfollow); followingView(v); });
+  v.querySelectorAll('[data-media]').forEach(b => b.onclick = () => openLightbox(s, +b.dataset.media));
+}
+
+function notificationsView(v) {
+  v.innerHTML = `
+    <div class="tab-title">Avisos</div>
+    <div class="detail">
+      ${inbox.length ? inbox.map((n, i) => `
+        <div class="notif rise" ${d(i * 60)} ${n.storyId ? `data-story="${n.storyId}"` : ''}>
+          <div class="notif-dot ${n.read ? 'read' : ''}"></div>
+          <div><div class="row-label">${n.title}</div><div class="row-hint">${n.body}</div><div class="meta">hace ${timeAgo(n.at)}</div></div>
+        </div>`).join('') : `
+        <div class="empty rise"><div class="lead">Todo tranquilo.</div>Sigue un auge y te avisaremos cuando cambie.</div>`}
+    </div>`;
+  inbox.forEach(n => n.read = true);
+  setTimeout(renderTabs);
+  v.querySelectorAll('[data-back]').forEach(b => b.onclick = pop);
+  v.querySelectorAll('[data-story]').forEach(b => b.onclick = () => push(storyView(b.dataset.story)));
+}
+
+function settingsView(v) {
+  v.innerHTML = `
+    ${topbar('Ajustes')}
+    <div class="detail">
+      <div class="section rise">TUS TEMAS</div>
+      <div class="hint">Elige qué te interesa. Sin selección verás todo.</div>
+      <div class="chips rise" ${d(60)}>${CATEGORIES.map(([id, label]) => `<button class="chip ${prefs.categories.includes(id) ? 'on' : ''}" data-cat="${id}">${label}</button>`).join('')}</div>
+      <div class="section rise" ${d(120)}>NOTIFICACIONES</div>
+      ${TOGGLES.map(([key, label, hint], i) => `
+        <div class="row rise" ${d(160 + i * 50)} data-toggle="${key}">
+          <div><div class="row-label">${label}</div><div class="row-hint">${hint}</div></div>
+          <div class="switch ${prefs[key] ? 'on' : ''}"></div>
+        </div>`).join('')}
+      <button class="link" id="test">Probar notificación</button>
+      <div class="section">APARIENCIA</div>
+      <div class="row" id="dark"><div><div class="row-label">Modo oscuro</div></div><div class="switch ${dark ? 'on' : ''}"></div></div>
+      <div class="end">Auge! 0.1 · Global events intelligence for everyone</div>
+    </div>`;
+  v.querySelectorAll('[data-back]').forEach(b => b.onclick = pop);
+  v.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => {
+    const id = b.dataset.cat;
+    prefs.categories = prefs.categories.includes(id) ? prefs.categories.filter(c => c !== id) : [...prefs.categories, id];
+    store.set('prefs', prefs);
+    b.classList.toggle('on');
+    selected = null;
+  });
+  v.querySelectorAll('[data-toggle]').forEach(r => r.onclick = () => {
+    const k = r.dataset.toggle;
+    prefs[k] = !prefs[k];
+    store.set('prefs', prefs);
+    r.querySelector('.switch').classList.toggle('on', prefs[k]);
+  });
+  v.querySelector('#test').onclick = () => { const s = STORIES[0]; notify(`Auge! · #${s.tag}`, s.brief, s.id); };
+  v.querySelector('#dark').onclick = e => {
+    dark = !dark; applyTheme(); store.set('theme', dark ? 'dark' : 'light');
+    e.currentTarget.querySelector('.switch').classList.toggle('on', dark);
+  };
+}
+
+document.querySelectorAll('#devices button').forEach(b => b.onclick = () => {
+  device = b.dataset.device;
+  document.querySelectorAll('#devices button').forEach(x => x.classList.toggle('on', x === b));
+  phone.classList.toggle('tablet', device === 'tablet');
+  phone.classList.toggle('duo', device === 'duo');
+  selected = null;
+  reset();
+});
+
+applyTheme();
+function playSplash() {
+  phone.querySelector('.splash')?.remove();
+  const s = document.createElement('div');
+  s.className = 'splash';
+  s.innerHTML = '<div class="brand">Auge<span class="bang l">!</span></div>';
+  phone.appendChild(s);
+  setTimeout(() => s.remove(), 1600);
+}
+playSplash();
+const loadStories = () => fetch('../src/app/core/stories.json', { cache: 'no-store' })
+  .then(r => r.json())
+  .then(raw => {
+    STORIES = raw.map(({ minutesAgo, timeline, ...s }) => ({ ...s, updatedAt: new Date(Date.now() - minutesAgo * 60000),
+      timeline: timeline.map(t => ({ at: new Date(Date.now() - t.minutesAgo * 60000), text: t.text })) }))
+      .sort((a, b) => b.heat - a.heat);
+  });
+loadStories()
+  .then(() => {
+    push(feedView);
+    // One "última hora" alert per launch for the hottest auge.
+    setTimeout(() => prefs.notifyBreaking && notify(`Auge! · #${STORIES[0].tag}`, STORIES[0].brief, STORIES[0].id), 1800);
+  });
+</script>
+</body>
+</html>

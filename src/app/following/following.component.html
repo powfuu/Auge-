@@ -1,0 +1,28 @@
+<GridLayout rows="auto, auto, *" class="screen" androidOverflowEdge="none,cutout">
+  <Label row="0" text="Siguiendo" class="tab-title"></Label>
+
+  @if (stories().length) {
+    <ScrollView row="1" orientation="horizontal" scrollBarIndicatorVisible="false" class="f-picker">
+      <StackLayout orientation="horizontal">
+        @for (s of stories(); track s.id; let i = $index) {
+          <StackLayout class="f-item" [class.f-item-on]="selected() === s.id" (loaded)="rise($event, i * 50)" (tap)="pick($event, s.id)">
+            <Label [text]="'#' + s.tag" class="f-item-tag"></Label>
+            <Label [text]="s.heat + '/100 · hace ' + timeAgo(s.updatedAt)" class="f-item-meta"></Label>
+          </StackLayout>
+        }
+      </StackLayout>
+    </ScrollView>
+
+    <!-- Re-created on each pick so the report animates in. -->
+    @for (id of [selected()]; track id) {
+      @if (id) {
+        <ns-story-view row="2" [storyId]="id" [showBack]="false"></ns-story-view>
+      }
+    }
+  } @else {
+    <StackLayout row="1" rowSpan="2" class="detail empty" (loaded)="rise($event, 0)">
+      <Label text="Aún no sigues ningún auge." class="lead"></Label>
+      <Label text="Pulsa «Seguir» en un auge y aquí lo verás con todo: informe, fotos, redes y fuentes." class="muted" textWrap="true"></Label>
+    </StackLayout>
+  }
+</GridLayout>

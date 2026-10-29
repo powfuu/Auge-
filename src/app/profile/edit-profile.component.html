@@ -1,0 +1,43 @@
+<GridLayout rows="auto, *" class="screen" androidOverflowEdge="none,cutout">
+  <GridLayout row="0" columns="auto, *, auto" class="topbar">
+    @if (!setup) {
+      <Label col="0" text="←" class="icon-btn" (tap)="close()"></Label>
+    }
+    <Label col="1" [text]="setup ? 'Crea tu perfil' : 'Editar perfil'" class="topbar-title"></Label>
+    <Label col="2" [text]="busy() ? '…' : 'Guardar'" class="pill" [opacity]="valid() ? 1 : 0.4" (tap)="save()"></Label>
+  </GridLayout>
+
+  <ScrollView row="1">
+    <StackLayout class="detail">
+      <StackLayout horizontalAlignment="center" class="edit-preview" (loaded)="rise($event, 0)">
+        <ns-avatar [avatarId]="avatarId()" [size]="104" horizontalAlignment="center"></ns-avatar>
+        <Label [text]="fullName() || 'Tu nombre'" class="title small edit-name" textWrap="true"></Label>
+        <Label [text]="'@' + (username() || 'usuario')" class="muted edit-handle"></Label>
+      </StackLayout>
+
+      <Label text="TU FOTO" class="section" (loaded)="rise($event, 60)"></Label>
+      <Label text="Colección Auge, gratis. Elige la tuya." class="muted hint"></Label>
+      <FlexboxLayout flexWrap="wrap" justifyContent="space-between" (loaded)="rise($event, 100)">
+        @for (a of avatars; track a.id) {
+          <GridLayout class="avatar-option" [class.avatar-picked]="avatarId() === a.id" (tap)="pick($event, a.id)">
+            <ns-avatar [avatarId]="a.id" [size]="62"></ns-avatar>
+          </GridLayout>
+        }
+      </FlexboxLayout>
+
+      <Label text="NOMBRE COMPLETO" class="section" (loaded)="rise($event, 160)"></Label>
+      <TextField hint="Cómo te verán" maxLength="50" autocapitalizationType="words" class="auth-input" [text]="fullName()" (textChange)="fullName.set($any($event).value); error.set('')"></TextField>
+
+      <Label text="@USUARIO" class="section" (loaded)="rise($event, 200)"></Label>
+      <GridLayout columns="auto, *" class="auth-input handle-input">
+        <Label col="0" text="@" class="muted handle-at"></Label>
+        <TextField col="1" hint="tu_usuario" maxLength="20" autocapitalizationType="none" autocorrect="false" class="handle-field" [text]="username()" (textChange)="setUsername($any($event).value)" returnKeyType="done" (returnPress)="save()"></TextField>
+      </GridLayout>
+      <Label text="3–20 caracteres: letras, números, _ y ." class="muted disclaimer"></Label>
+
+      @if (error()) {
+        <Label [text]="error()" class="form-error" textWrap="true"></Label>
+      }
+    </StackLayout>
+  </ScrollView>
+</GridLayout>

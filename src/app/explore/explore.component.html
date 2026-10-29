@@ -1,0 +1,46 @@
+<GridLayout rows="auto, auto, *" class="screen" androidOverflowEdge="none,cutout" (layoutChanged)="onLayout($event)">
+  <StackLayout row="0">
+    <Label text="Todos los auges" class="tab-title"></Label>
+    <!-- Legend: what the big number means. -->
+    <GridLayout columns="auto, *" class="legend" (loaded)="rise($event, 0)">
+      <Label col="0" text="&#xe80e;" class="mi legend-icon"></Label>
+      <StackLayout col="1">
+        <Label text="Índice de auge, de 0 a 100" class="legend-title"></Label>
+        <Label text="Cuánto crece un tema ahora en medios y redes. 100 = lo que más arde." class="muted legend-text" textWrap="true"></Label>
+      </StackLayout>
+    </GridLayout>
+  </StackLayout>
+
+  <!-- Category filter -->
+  <ScrollView row="1" orientation="horizontal" scrollBarIndicatorVisible="false" class="filters">
+    <StackLayout orientation="horizontal">
+      <Label text="Todos" class="chip" [class.chip-on]="!category()" (tap)="category.set(null)"></Label>
+      @for (c of categories; track c.id) {
+        <Label [text]="c.label" class="chip" [class.chip-on]="category() === c.id" (tap)="category.set(c.id)"></Label>
+      }
+    </StackLayout>
+  </ScrollView>
+
+  <ScrollView row="2">
+    <FlexboxLayout flexWrap="wrap" class="grid">
+      @for (s of filtered(); track s.id; let i = $index) {
+        <GridLayout rows="auto, auto, *, auto" [width]="tile()" [height]="tile()" class="tile" (loaded)="rise($event, i * 40)" (tap)="open($event, s)">
+          <StackLayout row="0" orientation="horizontal">
+            <Label [text]="s.heat.toString()" class="tile-heat" [opacity]="0.35 + s.heat / 150"></Label>
+            <Label text="/100" class="tile-unit"></Label>
+          </StackLayout>
+          <GridLayout row="1" columns="*" class="heat-track tile-track">
+            <StackLayout class="heat-fill" horizontalAlignment="left" [width]="s.heat + '%'"></StackLayout>
+          </GridLayout>
+          <Label row="2" [text]="'#' + s.tag" class="tile-tag" textWrap="true" maxLines="2" verticalAlignment="bottom"></Label>
+          <Label row="3" [text]="s.region" class="tile-region"></Label>
+          @if (followed().has(s.id)) {
+            <Label row="0" text="&#xe866;" class="mi followed-badge" horizontalAlignment="right" verticalAlignment="top"></Label>
+          }
+        </GridLayout>
+      } @empty {
+        <Label text="Nada en auge en este tema ahora mismo." class="muted end" width="100%"></Label>
+      }
+    </FlexboxLayout>
+  </ScrollView>
+</GridLayout>

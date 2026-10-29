@@ -1,0 +1,41 @@
+<GridLayout rows="auto, *" class="screen" androidOverflowEdge="none,cutout">
+  <GridLayout row="0" columns="auto, *" class="topbar">
+    <Label col="0" text="←" class="icon-btn" (tap)="back()"></Label>
+    <Label col="1" text="Ajustes" class="topbar-title"></Label>
+  </GridLayout>
+
+  <ScrollView row="1">
+    <StackLayout class="detail settings">
+      <Label text="TUS TEMAS" class="section" (loaded)="rise($event, 0)"></Label>
+      <Label text="Elige qué te interesa. Sin selección verás todo." class="muted hint" textWrap="true"></Label>
+      <FlexboxLayout flexWrap="wrap" (loaded)="rise($event, 60)">
+        @for (c of categories; track c.id) {
+          <Label [text]="c.label" class="chip" [class.chip-on]="prefs().categories.includes(c.id)" (tap)="toggleCategory(c.id)"></Label>
+        }
+      </FlexboxLayout>
+
+      <Label text="NOTIFICACIONES" class="section" (loaded)="rise($event, 120)"></Label>
+      @for (t of toggles; track t.key; let i = $index) {
+        <GridLayout columns="*, auto" class="row" (loaded)="rise($event, 160 + i * 50)" (tap)="toggle(t.key)">
+          <StackLayout col="0">
+            <Label [text]="t.label" class="row-label"></Label>
+            <Label [text]="t.hint" class="muted row-hint" textWrap="true"></Label>
+          </StackLayout>
+          <GridLayout col="1" class="switch" [class.switch-on]="prefs()[t.key]">
+            <Label class="knob" [horizontalAlignment]="prefs()[t.key] ? 'right' : 'left'"></Label>
+          </GridLayout>
+        </GridLayout>
+      }
+      <Label text="Probar notificación" class="link" (tap)="test()"></Label>
+
+      <Label text="APARIENCIA" class="section"></Label>
+      <GridLayout columns="*, auto" class="row" (tap)="theme.toggle()">
+        <Label col="0" text="Modo oscuro" class="row-label"></Label>
+        <GridLayout col="1" class="switch" [class.switch-on]="theme.mode() === 'dark'">
+          <Label class="knob" [horizontalAlignment]="theme.mode() === 'dark' ? 'right' : 'left'"></Label>
+        </GridLayout>
+      </GridLayout>
+      <Label text="Auge! 0.1 · Global events intelligence for everyone" class="muted end"></Label>
+    </StackLayout>
+  </ScrollView>
+</GridLayout>

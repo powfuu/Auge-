@@ -1,0 +1,1329 @@
+[
+  {
+    "id": "toledo-train",
+    "tag": "Tragedia ferroviaria en Toledo",
+    "region": "España",
+    "heat": 97,
+    "minutesAgo": 12,
+    "clustered": 180,
+    "brief": "Choque de trenes de alta velocidad: al menos 68 muertos.",
+    "facts": [
+      {
+        "text": "Dos trenes chocaron cerca de Toledo, en Castilla-La Mancha.",
+        "certainty": "confirmed"
+      },
+      {
+        "text": "España decreta tres días de luto oficial.",
+        "certainty": "confirmed"
+      },
+      {
+        "text": "Los equipos de rescate siguen buscando supervivientes.",
+        "certainty": "developing"
+      },
+      {
+        "text": "Aún no se conoce la causa del choque.",
+        "certainty": "uncertain"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      },
+      {
+        "name": "Infobae · EFE",
+        "url": "https://www.infobae.com/america/agencias/2026/10/29/temas-del-dia-de-internacional-del-jueves-29-de-octubre-de-2026-1200-gmt/"
+      },
+      {
+        "name": "UnoTV",
+        "url": "https://www.unotv.com/nacional/las-de-hoy-29-de-octubre-de-2026/"
+      }
+    ],
+    "topics": [
+      "#Toledo",
+      "#LutoOficial",
+      "#AltaVelocidad",
+      "#Renfe"
+    ],
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Vecina de Toledo",
+        "handle": "@ejemplo_toledo",
+        "text": "Se oyen sirenas desde hace horas. Todo el barrio pendiente de las noticias."
+      },
+      {
+        "platform": "X",
+        "author": "Analista ferroviario",
+        "handle": "@ejemplo_rail",
+        "text": "Antes de especular con la causa, esperemos al informe de la comisión de investigación."
+      },
+      {
+        "platform": "TikTok",
+        "author": "Voluntaria",
+        "handle": "@ejemplo_ayuda",
+        "text": "Punto de donación de sangre abierto toda la noche."
+      }
+    ],
+    "category": "sucesos",
+    "pulse": {
+      "mood": "Duelo y solidaridad; piden respuestas sobre la causa.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 97
+        },
+        {
+          "name": "TikTok",
+          "volume": 82
+        },
+        {
+          "name": "Instagram",
+          "volume": 61
+        },
+        {
+          "name": "Facebook",
+          "volume": 34
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Toledo_Skyline_Panorama%2C_Spain_-_Dec_2006.jpg/960px-Toledo_Skyline_Panorama%2C_Spain_-_Dec_2006.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Toledo_Skyline_Panorama%2C_Spain_-_Dec_2006.jpg",
+        "credit": "Diliff",
+        "license": "CC BY 2.5",
+        "caption": "Toledo, ciudad más cercana al accidente"
+      },
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/1_toledo_spain_evening_sunset_2014_DXR_edit.jpg/960px-1_toledo_spain_evening_sunset_2014_DXR_edit.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:1_toledo_spain_evening_sunset_2014_DXR_edit.jpg",
+        "credit": "Chensiyuan",
+        "license": "CC BY-SA 3.0",
+        "caption": "Toledo al atardecer"
+      },
+      {
+        "type": "video",
+        "url": "https://www.telemundo.com/noticias/noticias-telemundo/video/las-noticias-de-la-manana-jueves-29-de-octubre-de-2026-tmvo13239166",
+        "title": "Las noticias de la mañana, 29 de octubre",
+        "source": "Telemundo"
+      }
+    ],
+    "timeline": [
+      {
+        "minutesAgo": 300,
+        "text": "Choque de dos trenes de alta velocidad cerca de Toledo."
+      },
+      {
+        "minutesAgo": 200,
+        "text": "Primeras cifras de víctimas."
+      },
+      {
+        "minutesAgo": 90,
+        "text": "El Gobierno decreta tres días de luto."
+      },
+      {
+        "minutesAgo": 12,
+        "text": "La cifra sube a 68 muertos; sigue la búsqueda."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "Circula que fue un sabotaje.",
+        "verdict": "unproven",
+        "note": "Ninguna fuente oficial lo respalda; la causa no se conoce."
+      },
+      {
+        "claim": "«Más de 100 muertos».",
+        "verdict": "contradicted",
+        "note": "La cifra confirmada es de 68."
+      }
+    ]
+  },
+  {
+    "id": "israel-election",
+    "tag": "Israel sin ganador",
+    "region": "Oriente Medio",
+    "heat": 88,
+    "minutesAgo": 30,
+    "clustered": 142,
+    "brief": "Bloqueo en las urnas y récord de los partidos árabes.",
+    "facts": [
+      {
+        "text": "Ningún bloque logra una mayoría clara en la Knéset.",
+        "certainty": "confirmed"
+      },
+      {
+        "text": "Los partidos árabes van camino de 19 escaños, un récord.",
+        "certainty": "developing"
+      },
+      {
+        "text": "Netanyahu denuncia fraude, sin pruebas públicas.",
+        "certainty": "uncertain"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      },
+      {
+        "name": "10 Things",
+        "url": "https://www.10things.news/p/10-things-global-news-29th-october-e6a"
+      }
+    ],
+    "topics": [
+      "#Knesset",
+      "#IsraelElection",
+      "#Netanyahu"
+    ],
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Corresponsal",
+        "handle": "@ejemplo_jerusalen",
+        "text": "Las negociaciones para formar coalición pueden durar semanas."
+      },
+      {
+        "platform": "X",
+        "author": "Politóloga",
+        "handle": "@ejemplo_politica",
+        "text": "19 escaños árabes cambian por completo la aritmética parlamentaria."
+      }
+    ],
+    "category": "politica",
+    "pulse": {
+      "mood": "Polarizado; fuerte debate sobre el fraude denunciado.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 88
+        },
+        {
+          "name": "TikTok",
+          "volume": 64
+        },
+        {
+          "name": "Instagram",
+          "volume": 51
+        },
+        {
+          "name": "Facebook",
+          "volume": 44
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Knesset_front_side_-_2022.jpg/960px-Knesset_front_side_-_2022.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Knesset_front_side_-_2022.jpg",
+        "credit": "Clema12",
+        "license": "CC BY-SA 4.0",
+        "caption": "La Knéset, Jerusalén"
+      }
+    ],
+    "timeline": [
+      {
+        "minutesAgo": 600,
+        "text": "Cierran los colegios electorales."
+      },
+      {
+        "minutesAgo": 240,
+        "text": "El recuento apunta a un bloqueo sin mayoría."
+      },
+      {
+        "minutesAgo": 30,
+        "text": "Netanyahu denuncia fraude sin aportar pruebas."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "«Fraude masivo en el recuento».",
+        "verdict": "unproven",
+        "note": "No hay pruebas públicas por ahora."
+      }
+    ]
+  },
+  {
+    "id": "drones-russia",
+    "tag": "1.200 drones sobre Rusia",
+    "region": "Rusia · Ucrania",
+    "heat": 83,
+    "minutesAgo": 55,
+    "clustered": 120,
+    "brief": "Uno de los mayores ataques con drones de toda la guerra.",
+    "facts": [
+      {
+        "text": "El Kremlin condena el ataque ucraniano.",
+        "certainty": "confirmed"
+      },
+      {
+        "text": "Se habla de más de 1.200 drones.",
+        "certainty": "developing"
+      },
+      {
+        "text": "Daños y víctimas, sin cifras verificadas.",
+        "certainty": "uncertain"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Infobae · EFE",
+        "url": "https://www.infobae.com/america/agencias/2026/10/29/temas-del-dia-de-internacional-del-jueves-29-de-octubre-de-2026-1200-gmt/"
+      }
+    ],
+    "topics": [
+      "#Ucrania",
+      "#Drones",
+      "#Kremlin"
+    ],
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Analista OSINT",
+        "handle": "@ejemplo_osint",
+        "text": "Los vídeos geolocalizados aún no confirman la cifra total de drones."
+      },
+      {
+        "platform": "Telegram",
+        "author": "Canal de noticias",
+        "handle": "@ejemplo_canal",
+        "text": "Cortes de luz reportados en varias regiones."
+      }
+    ],
+    "category": "conflictos",
+    "pulse": {
+      "mood": "Escepticismo con las cifras; muchos vídeos sin verificar.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 83
+        },
+        {
+          "name": "TikTok",
+          "volume": 53
+        },
+        {
+          "name": "Instagram",
+          "volume": 62
+        },
+        {
+          "name": "Facebook",
+          "volume": 44
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Moscow_05-2012_Kremlin_22.jpg/960px-Moscow_05-2012_Kremlin_22.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Moscow_05-2012_Kremlin_22.jpg",
+        "credit": "A.Savin",
+        "license": "CC BY-SA 3.0",
+        "caption": "El Kremlin, Moscú"
+      },
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Vista_general_del_Kremlin%2C_Mosc%C3%BA%2C_Rusia%2C_2016-10-03%2C_DD_18-19_HDR.jpg/960px-Vista_general_del_Kremlin%2C_Mosc%C3%BA%2C_Rusia%2C_2016-10-03%2C_DD_18-19_HDR.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Vista_general_del_Kremlin%2C_Mosc%C3%BA%2C_Rusia%2C_2016-10-03%2C_DD_18-19_HDR.jpg",
+        "credit": "Diego Delso",
+        "license": "CC BY-SA 4.0",
+        "caption": "Vista general del Kremlin"
+      }
+    ],
+    "timeline": [
+      {
+        "minutesAgo": 400,
+        "text": "Rusia informa de un ataque masivo con drones."
+      },
+      {
+        "minutesAgo": 55,
+        "text": "El Kremlin condena el ataque."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "«Más de 2.000 drones».",
+        "verdict": "contradicted",
+        "note": "Las fuentes hablan de más de 1.200."
+      }
+    ]
+  },
+  {
+    "id": "hormuz",
+    "tag": "Petroleros en llamas en Ormuz",
+    "region": "Golfo Pérsico",
+    "heat": 76,
+    "minutesAgo": 70,
+    "clustered": 64,
+    "brief": "Arden tres petroleros más cerca del estrecho.",
+    "facts": [
+      {
+        "text": "Se informa de tres nuevos petroleros en llamas.",
+        "certainty": "developing"
+      },
+      {
+        "text": "Origen de los incendios sin aclarar.",
+        "certainty": "uncertain"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      }
+    ],
+    "topics": [
+      "#Hormuz",
+      "#Petróleo",
+      "#Brent"
+    ],
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Trader de energía",
+        "handle": "@ejemplo_energia",
+        "text": "El mercado ya mira el precio del crudo de mañana."
+      }
+    ],
+    "category": "economia",
+    "pulse": {
+      "mood": "Inquietud por el precio de la gasolina.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 76
+        },
+        {
+          "name": "TikTok",
+          "volume": 61
+        },
+        {
+          "name": "Instagram",
+          "volume": 39
+        },
+        {
+          "name": "Facebook",
+          "volume": 47
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/STS004-37-716_-_Strait_of_Hormuz.jpg/960px-STS004-37-716_-_Strait_of_Hormuz.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:STS004-37-716_-_Strait_of_Hormuz.jpg",
+        "credit": "NASA",
+        "license": "Dominio público",
+        "caption": "El estrecho de Ormuz desde el espacio"
+      }
+    ],
+    "timeline": [
+      {
+        "minutesAgo": 300,
+        "text": "Primeros incendios en petroleros cerca del estrecho."
+      },
+      {
+        "minutesAgo": 70,
+        "text": "Se informa de tres petroleros más en llamas."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "«Irán ha cerrado el estrecho».",
+        "verdict": "unproven",
+        "note": "Ninguna fuente confirma un cierre."
+      }
+    ]
+  },
+  {
+    "id": "cuba-un",
+    "tag": "La ONU contra el embargo a Cuba",
+    "region": "ONU",
+    "heat": 64,
+    "minutesAgo": 110,
+    "clustered": 52,
+    "brief": "130 votos a favor de acabar con el embargo de EE. UU.",
+    "facts": [
+      {
+        "text": "La Asamblea General aprueba la resolución por 130 a 17.",
+        "certainty": "confirmed"
+      },
+      {
+        "text": "EE. UU. expulsa a un diplomático cubano tras un altercado en la ONU.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      },
+      {
+        "name": "Nhân Dân",
+        "url": "https://en.nhandan.vn/world-news-in-brief-october-29-post168425.html"
+      }
+    ],
+    "topics": [
+      "#Cuba",
+      "#ONU",
+      "#Embargo"
+    ],
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Diplomático retirado",
+        "handle": "@ejemplo_diplo",
+        "text": "Votación simbólica, pero el aislamiento de EE. UU. en este tema es cada año mayor."
+      }
+    ],
+    "category": "politica",
+    "pulse": {
+      "mood": "Dividido; mucho ruido en Miami y La Habana.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 64
+        },
+        {
+          "name": "TikTok",
+          "volume": 59
+        },
+        {
+          "name": "Instagram",
+          "volume": 28
+        },
+        {
+          "name": "Facebook",
+          "volume": 32
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Headquarters_of_the_United_Nations%2C_New_York_City%2C_20231001_1103_1006.jpg/960px-Headquarters_of_the_United_Nations%2C_New_York_City%2C_20231001_1103_1006.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Headquarters_of_the_United_Nations%2C_New_York_City%2C_20231001_1103_1006.jpg",
+        "credit": "Jakub Hałun",
+        "license": "CC BY 4.0",
+        "caption": "Sede de la ONU, Nueva York"
+      }
+    ],
+    "timeline": [
+      {
+        "minutesAgo": 300,
+        "text": "Votación en la Asamblea General: 130 a 17."
+      },
+      {
+        "minutesAgo": 110,
+        "text": "EE. UU. expulsa a un diplomático cubano."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "«La ONU levanta el embargo».",
+        "verdict": "contradicted",
+        "note": "La resolución no es vinculante; el embargo sigue."
+      }
+    ]
+  },
+  {
+    "id": "brazil",
+    "tag": "Trump cuestiona a Lula",
+    "region": "Brasil",
+    "heat": 58,
+    "minutesAgo": 140,
+    "clustered": 47,
+    "brief": "Trump llama «desgracia» a las elecciones brasileñas.",
+    "facts": [
+      {
+        "text": "Trump pone en duda la victoria de Lula.",
+        "certainty": "confirmed"
+      },
+      {
+        "text": "Flávio Bolsonaro abandona Brasil tras la derrota.",
+        "certainty": "developing"
+      },
+      {
+        "text": "Su destino y sus planes no están claros.",
+        "certainty": "uncertain"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      }
+    ],
+    "topics": [
+      "#Lula",
+      "#Bolsonaro",
+      "#Brasil"
+    ],
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Periodista en Brasilia",
+        "handle": "@ejemplo_brasilia",
+        "text": "Itamaraty prepara una respuesta oficial."
+      }
+    ],
+    "category": "politica",
+    "pulse": {
+      "mood": "Indignación cruzada entre seguidores de Lula y Bolsonaro.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 58
+        },
+        {
+          "name": "TikTok",
+          "volume": 42
+        },
+        {
+          "name": "Instagram",
+          "volume": 39
+        },
+        {
+          "name": "Facebook",
+          "volume": 21
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/PalaciodoplanaltoFR.jpg/960px-PalaciodoplanaltoFR.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:PalaciodoplanaltoFR.jpg",
+        "credit": "Dasfour2022",
+        "license": "CC BY-SA 4.0",
+        "caption": "Palacio do Planalto, Brasilia"
+      }
+    ],
+    "timeline": [
+      {
+        "minutesAgo": 500,
+        "text": "Lula gana las elecciones."
+      },
+      {
+        "minutesAgo": 300,
+        "text": "Flávio Bolsonaro sale del país."
+      },
+      {
+        "minutesAgo": 140,
+        "text": "Trump llama «desgracia» a la elección."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "«Bolsonaro pide asilo en EE. UU.».",
+        "verdict": "unproven",
+        "note": "Su destino no está confirmado."
+      }
+    ]
+  },
+  {
+    "id": "machado",
+    "tag": "Machado, de vuelta en Venezuela",
+    "region": "Venezuela",
+    "heat": 51,
+    "minutesAgo": 180,
+    "clustered": 39,
+    "brief": "La líder opositora impulsa elecciones presidenciales en 2027.",
+    "facts": [
+      {
+        "text": "María Corina Machado regresó al país hace cuatro días.",
+        "certainty": "confirmed"
+      },
+      {
+        "text": "Da hoy una rueda de prensa.",
+        "certainty": "developing"
+      },
+      {
+        "text": "Calendario electoral sin fecha.",
+        "certainty": "uncertain"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Infobae · EFE",
+        "url": "https://www.infobae.com/america/agencias/2026/10/29/temas-del-dia-de-internacional-del-jueves-29-de-octubre-de-2026-1200-gmt/"
+      }
+    ],
+    "topics": [
+      "#Venezuela",
+      "#MCM",
+      "#Elecciones2027"
+    ],
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Caraqueño",
+        "handle": "@ejemplo_caracas",
+        "text": "Mucha expectación por lo que anuncie hoy."
+      }
+    ],
+    "category": "politica",
+    "pulse": {
+      "mood": "Expectación y esperanza entre la diáspora.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 51
+        },
+        {
+          "name": "TikTok",
+          "volume": 45
+        },
+        {
+          "name": "Instagram",
+          "volume": 30
+        },
+        {
+          "name": "Facebook",
+          "volume": 19
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Panoramic_view_of_Caracas_night.jpg/960px-Panoramic_view_of_Caracas_night.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Panoramic_view_of_Caracas_night.jpg",
+        "credit": "Wilfredor",
+        "license": "CC0",
+        "caption": "Caracas de noche"
+      }
+    ],
+    "timeline": [
+      {
+        "minutesAgo": 5760,
+        "text": "María Corina Machado regresa a Venezuela."
+      },
+      {
+        "minutesAgo": 180,
+        "text": "Convoca una rueda de prensa."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "«Machado ha sido detenida».",
+        "verdict": "contradicted",
+        "note": "Ha convocado una rueda de prensa hoy."
+      }
+    ]
+  },
+  {
+    "id": "gaza-mawasi",
+    "tag": "Ataque en al-Mawasi",
+    "region": "Gaza",
+    "heat": 49,
+    "minutesAgo": 95,
+    "clustered": 35,
+    "brief": "Un ataque israelí a un edificio ministerial deja 4 muertos.",
+    "facts": [
+      {
+        "text": "Al menos 15 heridos, según los reportes.",
+        "certainty": "developing"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      }
+    ],
+    "topics": [
+      "#Gaza"
+    ],
+    "category": "conflictos",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Periodista local",
+        "handle": "@ejemplo_gaza",
+        "text": "Las ambulancias no dan abasto en la zona."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 49
+        },
+        {
+          "name": "TikTok",
+          "volume": 31
+        },
+        {
+          "name": "Instagram",
+          "volume": 38
+        },
+        {
+          "name": "Facebook",
+          "volume": 34
+        }
+      ]
+    },
+    "media": [],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "us-midterms",
+    "tag": "Midterms a 5 días",
+    "region": "EE. UU.",
+    "heat": 47,
+    "minutesAgo": 200,
+    "clustered": 88,
+    "brief": "Trump vuelve a Carolina del Sur a hacer campaña.",
+    "facts": [
+      {
+        "text": "Las elecciones de medio mandato son en cinco días.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Infobae · EFE",
+        "url": "https://infobae.com/america/agencias/2026/10/29/jueves-29-de-octubre-de-2026-0800-gmt"
+      }
+    ],
+    "topics": [
+      "#Midterms2026"
+    ],
+    "category": "politica",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Encuestador",
+        "handle": "@ejemplo_polls",
+        "text": "Carolina del Sur no estaba en la lista de estados disputados hace un mes."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 47
+        },
+        {
+          "name": "TikTok",
+          "volume": 31
+        },
+        {
+          "name": "Instagram",
+          "volume": 27
+        },
+        {
+          "name": "Facebook",
+          "volume": 32
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/US_Capitol_east_side.JPG/960px-US_Capitol_east_side.JPG",
+        "page": "https://commons.wikimedia.org/wiki/File:US_Capitol_east_side.JPG",
+        "credit": "Martin Falbisoner",
+        "license": "CC BY-SA 3.0",
+        "caption": "El Capitolio, Washington"
+      }
+    ],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "aden",
+    "tag": "Cierra el aeropuerto de Adén",
+    "region": "Yemen",
+    "heat": 42,
+    "minutesAgo": 160,
+    "clustered": 22,
+    "brief": "Ataques hutíes cierran el aeropuerto en plena escalada.",
+    "facts": [
+      {
+        "text": "Los combates se extienden en Yemen.",
+        "certainty": "developing"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      }
+    ],
+    "topics": [
+      "#Yemen"
+    ],
+    "category": "conflictos",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Viajero varado",
+        "handle": "@ejemplo_aden",
+        "text": "Todos los vuelos cancelados, sin información de cuándo reabren."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 42
+        },
+        {
+          "name": "TikTok",
+          "volume": 29
+        },
+        {
+          "name": "Instagram",
+          "volume": 24
+        },
+        {
+          "name": "Facebook",
+          "volume": 22
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "image",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Old_Town_Aden_Yemen.jpg/960px-Old_Town_Aden_Yemen.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Old_Town_Aden_Yemen.jpg",
+        "credit": "Jialiang Gao",
+        "license": "CC BY-SA 3.0",
+        "caption": "Casco antiguo de Adén"
+      }
+    ],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "ice-leak",
+    "tag": "Filtración de datos del ICE",
+    "region": "EE. UU.",
+    "heat": 40,
+    "minutesAgo": 230,
+    "clustered": 31,
+    "brief": "Hackers publican datos de unos 40.000 empleados.",
+    "facts": [
+      {
+        "text": "La autoría del ataque no está confirmada.",
+        "certainty": "uncertain"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Telemundo",
+        "url": "https://www.telemundo.com/noticias/noticias-telemundo/video/las-noticias-de-la-manana-jueves-29-de-octubre-de-2026-tmvo13239166"
+      }
+    ],
+    "topics": [
+      "#ICE",
+      "#Ciberseguridad"
+    ],
+    "category": "tecnologia",
+    "posts": [
+      {
+        "platform": "Reddit",
+        "author": "r/ciberseguridad",
+        "handle": "u/ejemplo_sec",
+        "text": "Falta saber si la filtración incluye direcciones particulares."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 40
+        },
+        {
+          "name": "TikTok",
+          "volume": 37
+        },
+        {
+          "name": "Instagram",
+          "volume": 20
+        },
+        {
+          "name": "Facebook",
+          "volume": 15
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "video",
+        "url": "https://www.telemundo.com/noticias/noticias-telemundo/video/las-noticias-de-la-manana-jueves-29-de-octubre-de-2026-tmvo13239166",
+        "title": "Las noticias de la mañana, 29 de octubre",
+        "source": "Telemundo"
+      }
+    ],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "world-series",
+    "tag": "Récord de Chourio",
+    "region": "MLB",
+    "heat": 38,
+    "minutesAgo": 260,
+    "clustered": 44,
+    "brief": "Jackson Chourio emula a Lou Brock en la Serie Mundial.",
+    "facts": [
+      {
+        "text": "Establece una marca histórica en la Serie Mundial.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Swing Completo",
+        "url": "https://swingcompleto.com/liveblogs/mlb-hoy-en-vivo-noticias-rumores-y-movimientos--29-de-octubre-de-2026-lb202610280001.html"
+      }
+    ],
+    "topics": [
+      "#WorldSeries",
+      "#Chourio"
+    ],
+    "category": "deportes",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Fan de los Brewers",
+        "handle": "@ejemplo_mlb",
+        "text": "¡Comparar a Chourio con Lou Brock ya es decir mucho!"
+      },
+      {
+        "platform": "TikTok",
+        "author": "Canal de béisbol",
+        "handle": "@ejemplo_beis",
+        "text": "El clip de la jugada ya va por millones de vistas."
+      }
+    ],
+    "pulse": {
+      "mood": "Euforia; el clip de la jugada es viral.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 38
+        },
+        {
+          "name": "TikTok",
+          "volume": 42
+        },
+        {
+          "name": "Instagram",
+          "volume": 22
+        },
+        {
+          "name": "Facebook",
+          "volume": 15
+        }
+      ]
+    },
+    "media": [],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "cdmx",
+    "tag": "Muere el primer jefe de Gobierno de CDMX",
+    "region": "México",
+    "heat": 34,
+    "minutesAgo": 300,
+    "clustered": 27,
+    "brief": "Falleció a los 92 años.",
+    "facts": [
+      {
+        "text": "Fue el primer jefe de Gobierno de la capital.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "UnoTV",
+        "url": "https://www.unotv.com/nacional/las-de-hoy-29-de-octubre-de-2026/"
+      }
+    ],
+    "topics": [
+      "#CDMX"
+    ],
+    "category": "sociedad",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Cronista de la ciudad",
+        "handle": "@ejemplo_cdmx",
+        "text": "Se va una figura clave de la transición democrática capitalina."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 34
+        },
+        {
+          "name": "TikTok",
+          "volume": 30
+        },
+        {
+          "name": "Instagram",
+          "volume": 18
+        },
+        {
+          "name": "Facebook",
+          "volume": 12
+        }
+      ]
+    },
+    "media": [],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "ine",
+    "tag": "Crisis en el INE",
+    "region": "México",
+    "heat": 30,
+    "minutesAgo": 320,
+    "clustered": 18,
+    "brief": "Ya suman 15 renuncias por la crisis del «clan Taddei».",
+    "facts": [
+      {
+        "text": "15 renuncias hasta ahora.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "UnoTV",
+        "url": "https://www.unotv.com/nacional/las-de-hoy-29-de-octubre-de-2026/"
+      }
+    ],
+    "topics": [
+      "#INE"
+    ],
+    "category": "politica",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Analista electoral",
+        "handle": "@ejemplo_ine",
+        "text": "Quince renuncias en días no es normal en el instituto."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 30
+        },
+        {
+          "name": "TikTok",
+          "volume": 30
+        },
+        {
+          "name": "Instagram",
+          "volume": 16
+        },
+        {
+          "name": "Facebook",
+          "volume": 13
+        }
+      ]
+    },
+    "media": [],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "dolores-huerta",
+    "tag": "Adiós a Dolores Huerta",
+    "region": "Los Ángeles",
+    "heat": 28,
+    "minutesAgo": 340,
+    "clustered": 21,
+    "brief": "Funeral de la histórica activista en Los Ángeles.",
+    "facts": [
+      {
+        "text": "El funeral se celebra en Los Ángeles.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Telemundo",
+        "url": "https://www.telemundo.com/noticias/noticias-telemundo/video/las-noticias-de-la-manana-jueves-29-de-octubre-de-2026-tmvo13239166"
+      }
+    ],
+    "topics": [
+      "#DoloresHuerta"
+    ],
+    "category": "sociedad",
+    "posts": [
+      {
+        "platform": "Instagram",
+        "author": "Organización comunitaria",
+        "handle": "@ejemplo_comunidad",
+        "text": "«Sí se puede». Gracias por todo, Dolores."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 28
+        },
+        {
+          "name": "TikTok",
+          "volume": 18
+        },
+        {
+          "name": "Instagram",
+          "volume": 22
+        },
+        {
+          "name": "Facebook",
+          "volume": 11
+        }
+      ]
+    },
+    "media": [
+      {
+        "type": "video",
+        "url": "https://www.telemundo.com/noticias/noticias-telemundo/video/las-noticias-de-la-manana-jueves-29-de-octubre-de-2026-tmvo13239166",
+        "title": "Las noticias de la mañana, 29 de octubre",
+        "source": "Telemundo"
+      }
+    ],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "cappadocia",
+    "tag": "Derrumbe en Capadocia",
+    "region": "Turquía",
+    "heat": 25,
+    "minutesAgo": 280,
+    "clustered": 14,
+    "brief": "Cae una formación rocosa: tres muertos.",
+    "facts": [
+      {
+        "text": "Tres personas murieron al colapsar la roca.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      }
+    ],
+    "topics": [
+      "#Capadocia"
+    ],
+    "category": "sucesos",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Guía turístico",
+        "handle": "@ejemplo_turquia",
+        "text": "Las autoridades han cerrado el acceso a la zona."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 25
+        },
+        {
+          "name": "TikTok",
+          "volume": 26
+        },
+        {
+          "name": "Instagram",
+          "volume": 15
+        },
+        {
+          "name": "Facebook",
+          "volume": 10
+        }
+      ]
+    },
+    "media": [],
+    "timeline": [],
+    "claims": []
+  },
+  {
+    "id": "haiti",
+    "tag": "Haití aplaza elecciones",
+    "region": "Haití",
+    "heat": 21,
+    "minutesAgo": 360,
+    "clustered": 12,
+    "brief": "La primera vuelta presidencial pasa a julio de 2027.",
+    "facts": [
+      {
+        "text": "Nueva fecha: julio de 2027.",
+        "certainty": "confirmed"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Havana Times",
+        "url": "https://havanatimes.org/news/international-news-briefs-for-thursday-october-29-2026/"
+      }
+    ],
+    "topics": [
+      "#Haití"
+    ],
+    "category": "politica",
+    "posts": [
+      {
+        "platform": "X",
+        "author": "Observador electoral",
+        "handle": "@ejemplo_haiti",
+        "text": "Otro aplazamiento más; la seguridad sigue siendo el gran obstáculo."
+      }
+    ],
+    "pulse": {
+      "mood": "Conversación moderada; pocas voces nuevas.",
+      "networks": [
+        {
+          "name": "X",
+          "volume": 21
+        },
+        {
+          "name": "TikTok",
+          "volume": 19
+        },
+        {
+          "name": "Instagram",
+          "volume": 12
+        },
+        {
+          "name": "Facebook",
+          "volume": 13
+        }
+      ]
+    },
+    "media": [],
+    "timeline": [],
+    "claims": []
+  }
+]

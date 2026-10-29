@@ -1,0 +1,67 @@
+<GridLayout rows="auto, *" class="screen" androidOverflowEdge="none,cutout">
+  <GridLayout row="0" columns="*, auto" class="tab-head">
+    <Label col="0" text="Perfil" class="tab-title"></Label>
+    <Label col="1" text="&#xe8b8;" class="icon-btn mi icon-mi" (tap)="go('/settings')"></Label>
+  </GridLayout>
+
+  <ScrollView row="1">
+    <StackLayout class="detail">
+      @if (auth.user(); as u) {
+        <GridLayout columns="auto, *" class="profile-head" (loaded)="rise($event, 0)">
+          <ns-avatar col="0" [avatarId]="u.avatarId" [size]="84" class="profile-avatar" (tap)="go('/profile/edit')"></ns-avatar>
+          <StackLayout col="1" class="profile-id" verticalAlignment="center">
+            <Label [text]="u.fullName || 'Sin nombre'" class="title small" textWrap="true"></Label>
+            <Label [text]="'@' + (u.username || 'elige-tu-usuario')" class="muted profile-handle"></Label>
+            <Label [text]="'Con ' + providers[u.provider] + ' · desde ' + since()" class="meta"></Label>
+            <StackLayout orientation="horizontal">
+              <Label text="Editar perfil" class="edit-pill" (tap)="go('/profile/edit')"></Label>
+            </StackLayout>
+          </StackLayout>
+        </GridLayout>
+
+        <GridLayout columns="*, *, *" class="stats" (loaded)="rise($event, 80)">
+          @for (s of stats(); track s.label; let i = $index) {
+            <StackLayout [col]="i" class="stat">
+              <Label [text]="s.value.toString()" class="stat-value"></Label>
+              <Label [text]="s.label" class="muted stat-label"></Label>
+            </StackLayout>
+          }
+        </GridLayout>
+
+        <Label text="TUS TEMAS" class="section" (loaded)="rise($event, 140)"></Label>
+        <FlexboxLayout flexWrap="wrap" (loaded)="rise($event, 160)" (tap)="go('/settings')">
+          @for (t of topics(); track t) {
+            <Label [text]="t" class="chip chip-on"></Label>
+          } @empty {
+            <Label text="Todos los temas · Elegir" class="chip"></Label>
+          }
+        </FlexboxLayout>
+
+        <Label text="CUENTA" class="section" (loaded)="rise($event, 200)"></Label>
+        <GridLayout columns="*, auto" class="row" (loaded)="rise($event, 220)" (tap)="go('/following')">
+          <Label col="0" text="Auges que sigo" class="row-label"></Label>
+          <Label col="1" text="›" class="muted"></Label>
+        </GridLayout>
+        <GridLayout columns="*, auto" class="row" (loaded)="rise($event, 260)" (tap)="go('/notifications')">
+          <Label col="0" text="Notificaciones" class="row-label"></Label>
+          <Label col="1" text="›" class="muted"></Label>
+        </GridLayout>
+        <GridLayout columns="*, auto" class="row" (loaded)="rise($event, 300)" (tap)="go('/settings')">
+          <Label col="0" text="Ajustes" class="row-label"></Label>
+          <Label col="1" text="›" class="muted"></Label>
+        </GridLayout>
+
+        <Label text="Cerrar sesión" class="danger" (tap)="signOut()"></Label>
+        @if (auth.demo) {
+          <Label text="Modo demo: la cuenta solo existe en este dispositivo hasta conectar Supabase." class="muted disclaimer" textWrap="true"></Label>
+        }
+      } @else {
+        <StackLayout class="empty" (loaded)="rise($event, 0)">
+          <Label text="Entra para guardar tus auges en todos tus dispositivos." class="lead" textWrap="true"></Label>
+          <Label text="Con Google o Apple. Sin contraseñas." class="muted" textWrap="true"></Label>
+          <Label text="Entrar" class="auth-btn auth-primary auth-label" (tap)="go('/login')"></Label>
+        </StackLayout>
+      }
+    </StackLayout>
+  </ScrollView>
+</GridLayout>

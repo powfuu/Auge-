@@ -1,0 +1,41 @@
+{
+  "name": "auge",
+  "version": "0.1.0",
+  "description": "Auge! — Global events intelligence for everyone",
+  "main": "src/main.ts",
+  "private": true,
+  "scripts": {
+    "android": "ns run android",
+    "ios": "ns run ios",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@angular/animations": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "@nativescript-community/texttospeech": "^3.1.2",
+    "@nativescript-community/ui-pulltorefresh": "^2.5.11",
+    "@nativescript-community/ui-svg": "^0.2.29",
+    "@nativescript/angular": "^22.0.0",
+    "@nativescript/core": "^9.0.0",
+    "@nativescript/local-notifications": "^7.0.0",
+    "@nativescript/social-share": "^2.3.0",
+    "@nativescript/zone-js": "^4.0.0",
+    "@supabase/supabase-js": "^2.118.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.6.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@nativescript/types": "^9.0.0",
+    "@nativescript/webpack": "^5.0.0",
+    "@ngtools/webpack": "^22.0.0",
+    "typescript": "~6.0.0"
+  }
+}

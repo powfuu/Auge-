@@ -1,0 +1,31 @@
+<GridLayout rows="auto, *, auto" class="screen login" androidOverflowEdge="none,cutout">
+  <GridLayout row="0" columns="*, auto" class="topbar">
+    <Label col="1" text="Ahora no" class="muted skip" (tap)="close()"></Label>
+  </GridLayout>
+
+  <StackLayout row="1" class="login-body" verticalAlignment="center">
+    <StackLayout orientation="horizontal" horizontalAlignment="center" (loaded)="rise($event, 0)">
+      <Label text="Auge" class="brand login-brand"></Label>
+      <Label text="!" class="brand login-brand bang" (loaded)="bang($event)"></Label>
+    </StackLayout>
+    <Label text="El mundo en 30 segundos. Sigue tus auges y recibe avisos cuando cambien." class="muted login-tagline" textWrap="true" (loaded)="rise($event, 80)"></Label>
+
+    <StackLayout class="login-actions">
+      <GridLayout columns="auto, *" class="auth-btn auth-apple" (loaded)="rise($event, 160)" (tap)="provider($event, 'apple')">
+        <Label col="0" text="" class="auth-icon"></Label>
+        <Label col="1" [text]="busy() ? 'Abriendo…' : 'Continuar con Apple'" class="auth-label"></Label>
+      </GridLayout>
+      <GridLayout columns="auto, *" class="auth-btn auth-google" (loaded)="rise($event, 220)" (tap)="provider($event, 'google')">
+        <Label col="0" text="G" class="auth-icon google-g"></Label>
+        <Label col="1" [text]="busy() ? 'Abriendo…' : 'Continuar con Google'" class="auth-label"></Label>
+      </GridLayout>
+    </StackLayout>
+  </StackLayout>
+
+  <StackLayout row="2" class="login-foot">
+    @if (auth.demo) {
+      <Label text="Modo demo: falta conectar Supabase. No se guarda nada en la nube." class="muted disclaimer" textWrap="true"></Label>
+    }
+    <Label text="Al continuar aceptas los Términos y la Política de privacidad." class="muted disclaimer" textWrap="true"></Label>
+  </StackLayout>
+</GridLayout>
