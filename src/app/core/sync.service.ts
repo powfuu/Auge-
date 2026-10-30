@@ -20,7 +20,7 @@ const toRow = (p: Prefs): PrefsRow => ({
   quiet_hours: p.quietHours,
 });
 
-const fromRow = (r: PrefsRow): Prefs => ({
+const fromRow = (r: PrefsRow): Omit<Prefs, 'edition'> => ({
   categories: r.categories,
   notifyFollowed: r.notify_followed,
   notifyBreaking: r.notify_breaking,
@@ -83,7 +83,8 @@ export class SyncService {
     if (prefs.error) throw prefs.error;
 
     this.remoteFollows = new Set(follows.data.map((r) => r.story_id as string));
-    if (prefs.data) this.prefs.prefs.set(fromRow(prefs.data as PrefsRow));
+    // The edition stays per device (a phone in German can follow the German edition).
+    if (prefs.data) this.prefs.prefs.set({ ...fromRow(prefs.data as PrefsRow), edition: this.prefs.prefs().edition });
     // Merge: anything followed on this device before signing in is kept and uploaded.
     const merged = new Set([...this.stories.followed(), ...this.remoteFollows]);
     this.stories.setFollowed(merged);

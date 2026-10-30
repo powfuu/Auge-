@@ -1,5 +1,6 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { ApplicationSettings } from '@nativescript/core';
+import { Edition } from './editions';
 import { Category } from './models';
 
 export interface Prefs {
@@ -10,10 +11,12 @@ export interface Prefs {
   notifyDigest: boolean;
   /** Silence pushes 23:00–08:00. */
   quietHours: boolean;
+  /** News edition chosen by the user; null follows the device language. */
+  edition: Edition | null;
 }
 
 const KEY = 'prefs';
-const DEFAULTS: Prefs = { categories: [], notifyFollowed: true, notifyBreaking: true, notifyDigest: false, quietHours: true };
+const DEFAULTS: Prefs = { categories: [], notifyFollowed: true, notifyBreaking: true, notifyDigest: false, quietHours: true, edition: null };
 
 function load(): Prefs {
   try {

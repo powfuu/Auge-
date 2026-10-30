@@ -37,7 +37,7 @@ export class NotificationsService {
     if (!this.prefs.prefs().notifyFollowed) return;
     const pending = story.facts.filter((f) => f.certainty !== 'confirmed').length;
     this.push(
-      `Sigues #${story.tag}`,
+      `Sigues Auge · #${story.tag}`,
       pending ? `Te avisaremos de ${pending} punto${pending > 1 ? 's' : ''} aún sin confirmar.` : 'Te avisaremos si hay cambios importantes.',
       story.id,
     );

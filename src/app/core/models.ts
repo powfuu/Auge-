@@ -35,12 +35,17 @@ export interface Story {
   /** How many original articles were collapsed into this story */
   clustered: number;
   category: Category;
-  /** Simulated until a social listening provider is connected. */
-  pulse: { mood: string; networks: { name: string; volume: number }[] };
+  /** Simulated until a social listening provider is connected; absent on live stories. */
+  pulse?: { mood: string; networks: { name: string; volume: number }[] };
   /** Related hashtags trending on social networks */
   topics: string[];
   posts: Post[];
-  /** Photos (free-licensed context images) and videos (links to the original). */
+  /** ISO country the story is about, and the countries whose outlets cover it. */
+  country?: string | null;
+  countries?: string[];
+  /** Cover photo (first of media), shown on cards. */
+  image?: string | null;
+  /** Photos (outlets' own, credited and linked; Wikipedia, free license) and videos (links to the original). */
   media: Media[];
   /** Reported developments in order; times are approximate. */
   timeline: { at: Date; text: string }[];

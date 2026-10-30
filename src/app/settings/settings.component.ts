@@ -3,6 +3,7 @@ import { RouterExtensions } from '@nativescript/angular';
 import { Page } from '@nativescript/core';
 import { NsEvent, rise, viewOf } from '../core/animate';
 import { CATEGORIES } from '../core/categories';
+import { EDITIONS, Edition, deviceEdition } from '../core/editions';
 import { NotificationsService } from '../core/notifications.service';
 import { Prefs, PrefsService } from '../core/prefs.service';
 import { StoriesService } from '../core/stories.service';
@@ -23,6 +24,8 @@ export class SettingsComponent {
   readonly theme = inject(ThemeService);
   readonly prefs = this.service.prefs;
   readonly categories = CATEGORIES;
+  readonly editions = EDITIONS;
+  readonly deviceEdition = deviceEdition();
   readonly toggles: { key: Toggle; label: string; hint: string }[] = [
     { key: 'notifyFollowed', label: 'Auges que sigo', hint: 'Cuando algo cambie o se confirme.' },
     { key: 'notifyBreaking', label: 'Última hora', hint: 'Solo lo más importante del mundo.' },
@@ -42,6 +45,11 @@ export class SettingsComponent {
     const on = !this.prefs()[key];
     if (on && key !== 'quietHours') await this.notifications.requestPermission();
     this.service.set(key, on);
+  }
+
+  setEdition(id: Edition) {
+    // Picking the device language again means "follow the device".
+    this.service.set('edition', id === this.deviceEdition ? null : id);
   }
 
   toggleCategory(id: (typeof CATEGORIES)[number]['id']) {

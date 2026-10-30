@@ -4,3 +4,4 @@ hooks/
 *.js.map
 .DS_Store
 *.log
+supabase/.temp/

@@ -6,6 +6,20 @@
 
   <ScrollView row="1">
     <StackLayout class="detail settings">
+      <Label text="EDICIÓN" class="section" (loaded)="rise($event, 0)"></Label>
+      <Label text="Las noticias del mundo contadas por los medios de tu idioma." class="muted hint" textWrap="true"></Label>
+      @for (e of editions; track e.id) {
+        <GridLayout columns="*, auto" class="row" (tap)="setEdition(e.id)">
+          <StackLayout col="0">
+            <Label [text]="e.label" class="row-label"></Label>
+            <Label [text]="e.region" class="muted row-hint"></Label>
+          </StackLayout>
+          @if ((prefs().edition ?? deviceEdition) === e.id) {
+            <Label col="1" text="&#xe5ca;" class="mi edition-check"></Label>
+          }
+        </GridLayout>
+      }
+
       <Label text="TUS TEMAS" class="section" (loaded)="rise($event, 0)"></Label>
       <Label text="Elige qué te interesa. Sin selección verás todo." class="muted hint" textWrap="true"></Label>
       <FlexboxLayout flexWrap="wrap" (loaded)="rise($event, 60)">

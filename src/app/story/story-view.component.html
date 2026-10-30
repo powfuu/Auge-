@@ -22,14 +22,31 @@
       <Label col="0" text="←" class="icon-btn" (tap)="back()"></Label>
     }
     <StackLayout col="2" orientation="horizontal">
-      <Label text="↗︎" class="icon-btn share" (tap)="share(card)"></Label>
-      <Label [text]="following() ? 'Siguiendo' : 'Seguir'" class="pill" [class.pill-on]="following()" (tap)="follow($event)"></Label>
+      <GridLayout class="icon-btn share" (tap)="share(card)">
+        <SVGView [src]="shareSvg()" width="18" height="18"></SVGView>
+      </GridLayout>
+      <StackLayout orientation="horizontal" class="pill" [class.pill-on]="following()" (tap)="follow($event)">
+        <SVGView [src]="followSvg()" width="15" height="15" verticalAlignment="center"></SVGView>
+        <Label [text]="following() ? 'Siguiendo' : 'Seguir'" class="pill-text"></Label>
+      </StackLayout>
     </StackLayout>
   </GridLayout>
 
   <ScrollView row="1">
     <StackLayout class="detail">
-      <Label [text]="categoryLabel(s.category).toUpperCase()" class="eyebrow" (loaded)="rise($event, 0)"></Label>
+      @if (s.media[0]?.type === 'image') {
+        <GridLayout class="hero" (tap)="openMedia(0)">
+          <Image [src]="s.media[0].url" stretch="aspectFill" loadMode="async" class="hero-img" (loaded)="heroIn($event)"></Image>
+          <Label [text]="'Foto: ' + s.media[0].credit" class="hero-credit" verticalAlignment="bottom"></Label>
+        </GridLayout>
+      }
+      <GridLayout columns="*, auto" class="cat-row" (loaded)="rise($event, 0)">
+        <Label col="0" [text]="categoryLabel(s.category).toUpperCase()" class="eyebrow" verticalAlignment="center"></Label>
+        <StackLayout col="1" orientation="horizontal" class="listen-btn" [opacity]="listening() ? 0 : 1" [isUserInteractionEnabled]="!listening()" (tap)="listenTap($event)">
+          <Label text="&#xe037;" class="mi listen-icon"></Label>
+          <Label text="Escuchar Auge" class="listen-label"></Label>
+        </StackLayout>
+      </GridLayout>
       <Label [text]="'#' + s.tag" class="title" textWrap="true" (loaded)="rise($event, 0)"></Label>
 
       <Label class="meta" (loaded)="rise($event, 60)">
@@ -43,7 +60,6 @@
       <GridLayout columns="*" class="heat-track big" (loaded)="rise($event, 100)">
         <StackLayout class="heat-fill" horizontalAlignment="left" [width]="s.heat + '%'" (loaded)="grow($event, 250)"></StackLayout>
       </GridLayout>
-
       <Label [text]="s.brief" class="lead" textWrap="true" (loaded)="rise($event, 140)"></Label>
 
       <!-- Photos & videos: first thing after the brief, since it's what you look at while inside an auge. -->
@@ -65,7 +81,7 @@
             }
           </StackLayout>
         </ScrollView>
-        <Label text="Imágenes de contexto con licencia libre, no del suceso. Los vídeos abren el medio original." class="muted disclaimer" textWrap="true"></Label>
+        <Label text="Fotos de los medios citados (enlazan a la noticia original) y de Wikipedia con licencia libre." class="muted disclaimer" textWrap="true"></Label>
       }
 
       <Label text="EL INFORME" class="section" (loaded)="rise($event, 200)"></Label>
@@ -110,36 +126,29 @@
         }
       }
 
-      <Label text="PULSO EN REDES" class="section" (loaded)="rise($event, 440)"></Label>
-      <Label [text]="s.pulse.mood" class="pulse-mood" textWrap="true" (loaded)="rise($event, 460)"></Label>
-      @for (n of s.pulse.networks; track n.name; let i = $index) {
-        <GridLayout columns="80, *, 36" class="pulse-row" (loaded)="rise($event, 470 + i * 40)">
-          <Label col="0" [text]="n.name" class="pulse-name"></Label>
-          <GridLayout col="1" columns="*" class="heat-track pulse-track">
-            <StackLayout class="heat-fill" horizontalAlignment="left" [width]="n.volume + '%'" (loaded)="grow($event, 520 + i * 60)"></StackLayout>
+      @if (s.pulse; as p) {
+        <Label text="PULSO EN REDES" class="section" (loaded)="rise($event, 440)"></Label>
+        <Label [text]="p.mood" class="pulse-mood" textWrap="true" (loaded)="rise($event, 460)"></Label>
+        @for (n of p.networks; track n.name; let i = $index) {
+          <GridLayout columns="80, *, 36" class="pulse-row" (loaded)="rise($event, 470 + i * 40)">
+            <Label col="0" [text]="n.name" class="pulse-name"></Label>
+            <GridLayout col="1" columns="*" class="heat-track pulse-track">
+              <StackLayout class="heat-fill" horizontalAlignment="left" [width]="n.volume + '%'" (loaded)="grow($event, 520 + i * 60)"></StackLayout>
+            </GridLayout>
+            <Label col="2" [text]="n.volume.toString()" class="muted pulse-val"></Label>
           </GridLayout>
-          <Label col="2" [text]="n.volume.toString()" class="muted pulse-val"></Label>
-        </GridLayout>
+        }
       }
 
-      <Label text="EN REDES" class="section" (loaded)="rise($event, 480)"></Label>
-      <FlexboxLayout flexWrap="wrap" (loaded)="rise($event, 500)">
-        @for (t of s.topics; track t) {
-          <Label [text]="t" class="chip"></Label>
-        }
-      </FlexboxLayout>
-      @for (p of s.posts; track p.handle; let i = $index) {
-        <StackLayout class="post" (loaded)="rise($event, 540 + i * 60)">
-          <Label class="post-head">
-            <FormattedString>
-              <Span [text]="p.author" class="post-author"></Span>
-              <Span [text]="'  ' + p.handle + ' · ' + p.platform" class="muted"></Span>
-            </FormattedString>
-          </Label>
-          <Label [text]="p.text" class="post-text" textWrap="true"></Label>
-        </StackLayout>
+      @if (s.topics.length) {
+        <Label text="EN REDES" class="section" (loaded)="rise($event, 480)"></Label>
+        <FlexboxLayout flexWrap="wrap" (loaded)="rise($event, 500)">
+          @for (t of s.topics; track t) {
+            <Label [text]="t" class="chip" (tap)="openTag(t)"></Label>
+          }
+        </FlexboxLayout>
+        <Label text="Toca un hashtag para verlo en X, Instagram, TikTok o Facebook." class="muted disclaimer" textWrap="true"></Label>
       }
-      <Label text="Pulso, publicaciones y bulos son simulados hasta conectar las APIs de redes." class="muted disclaimer" textWrap="true"></Label>
 
       <Label [text]="'FUENTES · ' + s.clustered + ' artículos agrupados'" class="section" (loaded)="rise($event, 700)"></Label>
       @for (src of s.sources; track src.url; let i = $index) {

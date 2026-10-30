@@ -12,6 +12,9 @@ export class LayoutService {
   readonly wide = computed(() => this.width() >= WIDE);
   readonly gridColumns = computed(() => (this.wide() ? 5 : 3));
 
+  /** Bumped when the user taps the tab they're already on: that screen scrolls back to the top. */
+  readonly scrollTopTick = signal(0);
+
   /** Feed from the root view's layoutChanged so rotation and spanning are picked up. */
   update(width: number) {
     if (width > 0) this.width.set(width);

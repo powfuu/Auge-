@@ -1,8 +1,8 @@
-<!-- Phones: one column. Tablets / dual screens: feed left, report right (equal halves so a hinge falls between them). -->
-<GridLayout rows="*" [columns]="layout.wide() ? '*, *' : '*'" class="screen" androidOverflowEdge="none,cutout" (loaded)="onLoaded()" (layoutChanged)="onLayout($event)">
-  <GridLayout col="0" rows="auto, *" [class.pane-left]="layout.wide()">
+<!-- One screen at a time on every device; on tablets and dual screens the column keeps a comfortable reading width. -->
+<GridLayout rows="*" columns="*" class="screen" androidOverflowEdge="none,cutout" (loaded)="onLoaded()" (layoutChanged)="onLayout($event)">
+  <GridLayout col="0" rows="auto, *" [maxWidth]="layout.wide() ? 640 : null" horizontalAlignment="center" width="100%">
     <!-- Header -->
-    <GridLayout row="0" rows="auto, auto" columns="*" class="header" (loaded)="rise($event, 0)">
+    <GridLayout row="0" rows="auto, auto" columns="*, auto" class="header" (loaded)="rise($event, 0)">
       <StackLayout row="0" col="0">
         <Label [text]="today" class="eyebrow"></Label>
         <StackLayout orientation="horizontal">
@@ -10,7 +10,12 @@
           <Label text="!" class="brand bang" (loaded)="bang($event)"></Label>
         </StackLayout>
       </StackLayout>
-      <GridLayout row="1" col="0" columns="*, auto" class="live">
+      <!-- Audio summary, top-right -->
+      <StackLayout row="0" col="1" orientation="horizontal" class="listen-btn" verticalAlignment="top" [visibility]="brief.playing() && brief.kicker() === 'Escuchar Auges' ? 'collapse' : 'visible'" (tap)="listenTap($event)">
+        <Label text="&#xe037;" class="mi listen-icon"></Label>
+        <Label text="Escuchar Auges" class="listen-label"></Label>
+      </StackLayout>
+      <GridLayout row="1" col="0" colSpan="2" columns="*" class="live">
       <StackLayout col="0" orientation="horizontal">
         <GridLayout width="8" height="8" verticalAlignment="center">
           <Label class="dot ping" (loaded)="pulse($event)"></Label>
@@ -18,13 +23,12 @@
         </GridLayout>
         <Label text="En auge ahora" class="muted live-text"></Label>
       </StackLayout>
-      <Label col="1" [text]="brief.playing() ? '❚❚ Pausar' : '▶ Escuchar 60 s'" class="listen" (tap)="brief.toggle()"></Label>
       </GridLayout>
     </GridLayout>
 
     <!-- Feed -->
     <PullToRefresh row="1" class="ptr" (refresh)="onRefresh($event)">
-    <ScrollView>
+    <ScrollView (scroll)="onScroll($event)" (loaded)="scrollerReady($event)">
       <StackLayout class="feed">
         @if (showChanges() && changes().length) {
           <StackLayout class="changes" (loaded)="rise($event, 80)">
@@ -43,41 +47,58 @@
           </StackLayout>
         }
         @for (s of stories(); track s.id; let i = $index) {
-          <GridLayout rows="auto, auto, auto, auto" columns="auto, *" class="card" [class.card-on]="layout.wide() && current() === s.id"
+          <!-- A post, X style: heat ring as avatar, tag + time as the name line, brief as the text, action row. -->
+          <GridLayout columns="48, *" class="post-card"
                       (loaded)="rise($event, 120 + i * 90)" (tap)="open($event, s)">
-            <Label row="0" col="0" rowSpan="2" [text]="(i + 1).toString()" class="rank"></Label>
-            <Label row="0" col="1" [text]="'#' + s.tag" class="tag" textWrap="true" [class.tag-followed]="followed().has(s.id)"></Label>
-            @if (followed().has(s.id)) {
-              <Label row="0" col="1" text="&#xe866;" class="mi followed-badge" horizontalAlignment="right" verticalAlignment="top"></Label>
+            @if (s.image) {
+              <GridLayout col="0" width="48" height="48" verticalAlignment="top" (loaded)="ringIn($event, s.heat, i)">
+                <SVGView [src]="ringSvg(s.heat)" width="48" height="48"></SVGView>
+                <StackLayout width="42" height="42" borderRadius="21" class="ring-photo" (loaded)="shimmer($event)"></StackLayout>
+                @if (s.image) {
+                  <Image [src]="s.image" width="42" height="42" borderRadius="21" stretch="aspectFill" loadMode="async" (loaded)="fadeIn($event)"></Image>
+                }
+              </GridLayout>
+              <Label col="0" [text]="(i + 1).toString()" class="rank-chip" horizontalAlignment="right" verticalAlignment="top"></Label>
+            } @else {
+              <!-- No photo: no circle, just the rank, big and quiet. -->
+              <StackLayout col="0" verticalAlignment="top" horizontalAlignment="center" class="rank-solo">
+                <Label [text]="(i + 1).toString()" class="rank-bubble" horizontalAlignment="center"></Label>
+                <GridLayout columns="*" class="rank-heat-track" horizontalAlignment="center">
+                  <StackLayout class="heat-fill" horizontalAlignment="left" [width]="(30 * s.heat) / 100"></StackLayout>
+                </GridLayout>
+              </StackLayout>
             }
-            <Label row="1" col="1" [text]="s.brief" class="brief" textWrap="true"></Label>
 
-            <GridLayout row="2" col="1" columns="*" class="heat-track">
-              <StackLayout class="heat-fill" horizontalAlignment="left" [width]="s.heat + '%'" (loaded)="grow($event, 300 + i * 90)"></StackLayout>
-            </GridLayout>
-
-            <Label row="3" col="1" class="meta">
-              <FormattedString>
-                <Span [text]="s.region"></Span>
-                <Span text="  ·  "></Span>
-                <Span [text]="s.clustered + ' fuentes agrupadas'"></Span>
-                <Span text="  ·  "></Span>
-                <Span [text]="timeAgo(s.updatedAt)"></Span>
-              </FormattedString>
-            </Label>
+            <StackLayout col="1" class="post-main">
+              <Label [text]="'#' + s.tag" class="post-name" textWrap="true"></Label>
+              <StackLayout orientation="horizontal">
+                <SVGView [src]="iconSvg('auge', true, '#ff3b30')" width="13" height="13" verticalAlignment="center"></SVGView>
+                <Label class="post-sub">
+                  <FormattedString>
+                    <Span [text]="' ' + s.heat" class="heat-info"></Span>
+                    <Span [text]="' · ' + s.region + ' · ' + timeAgo(s.updatedAt)"></Span>
+                  </FormattedString>
+                </Label>
+              </StackLayout>
+              <Label [text]="s.brief" class="post-body" textWrap="true"></Label>
+              <GridLayout columns="auto, *" class="actions">
+                <StackLayout col="0" orientation="horizontal" class="act" (tap)="follow($event, s)">
+                  <SVGView [src]="iconSvg('following', followed().has(s.id), followed().has(s.id) ? '#ff3b30' : null)" width="16" height="16"></SVGView>
+                  <Label [text]="followed().has(s.id) ? 'Siguiendo' : 'Seguir'" class="act-label act-follow" [class.act-on]="followed().has(s.id)"></Label>
+                </StackLayout>
+                <StackLayout col="1" class="act" horizontalAlignment="right" (tap)="share($event, s)">
+                  <SVGView [src]="shareSvg()" width="16" height="16"></SVGView>
+                </StackLayout>
+              </GridLayout>
+            </StackLayout>
           </GridLayout>
         } @empty {
           <Label text="Nada en auge en tus temas ahora mismo. Cambia tus temas en Perfil → Ajustes." class="muted end" textWrap="true"></Label>
         }
-        <Label text="Ver todos los auges →" class="muted see-all" (tap)="go('/explore')"></Label>
+        <ActivityIndicator [busy]="loadingMore()" class="feed-more" color="#ff3b30"></ActivityIndicator>
       </StackLayout>
     </ScrollView>
     </PullToRefresh>
   </GridLayout>
 
-  @if (layout.wide() && current(); as id) {
-    @for (key of [id]; track key) {
-      <ns-story-view col="1" [storyId]="key" [showBack]="false"></ns-story-view>
-    }
-  }
 </GridLayout>

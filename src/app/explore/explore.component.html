@@ -6,7 +6,7 @@
       <Label col="0" text="&#xe80e;" class="mi legend-icon"></Label>
       <StackLayout col="1">
         <Label text="Índice de auge, de 0 a 100" class="legend-title"></Label>
-        <Label text="Cuánto crece un tema ahora en medios y redes. 100 = lo que más arde." class="muted legend-text" textWrap="true"></Label>
+        <Label text="El anillo se llena según cuánto crece el tema ahora en medios y lectores. 100 = lo que más arde; los que laten están al rojo vivo." class="muted legend-text" textWrap="true"></Label>
       </StackLayout>
     </GridLayout>
   </StackLayout>
@@ -21,19 +21,29 @@
     </StackLayout>
   </ScrollView>
 
-  <ScrollView row="2">
+  <ScrollView row="2" (scroll)="onScroll($event)">
+    <StackLayout>
     <FlexboxLayout flexWrap="wrap" class="grid">
       @for (s of filtered(); track s.id; let i = $index) {
-        <GridLayout rows="auto, auto, *, auto" [width]="tile()" [height]="tile()" class="tile" (loaded)="rise($event, i * 40)" (tap)="open($event, s)">
-          <StackLayout row="0" orientation="horizontal">
-            <Label [text]="s.heat.toString()" class="tile-heat" [opacity]="0.35 + s.heat / 150"></Label>
-            <Label text="/100" class="tile-unit"></Label>
-          </StackLayout>
-          <GridLayout row="1" columns="*" class="heat-track tile-track">
-            <StackLayout class="heat-fill" horizontalAlignment="left" [width]="s.heat + '%'"></StackLayout>
+        <GridLayout rows="auto, *, auto" [width]="tile()" [height]="tile()" class="tile" (loaded)="rise($event, i * 40)" (tap)="open($event, s)">
+          <!-- Anillo de auge: circular photo wrapped by an arc whose length is the heat index. -->
+          <GridLayout row="0" columns="auto, *">
+            @if (s.image) {
+              <GridLayout col="0" width="52" height="52" (loaded)="ring($event, s.heat, i)">
+                <SVGView [src]="ringSvg(s.heat)" width="52" height="52"></SVGView>
+                <StackLayout width="44" height="44" borderRadius="22" class="ring-photo" (loaded)="shimmer($event)"></StackLayout>
+                @if (s.image) {
+                  <Image [src]="s.image" width="44" height="44" borderRadius="22" stretch="aspectFill" loadMode="async" (loaded)="fadeIn($event)"></Image>
+                }
+              </GridLayout>
+            }
+            <StackLayout col="1" class="ring-num" verticalAlignment="center">
+              <Label [text]="s.heat.toString()" class="ring-value" [color]="s.heat >= 75 ? '#ff3b30' : s.heat >= 50 ? '#ff9500' : null"></Label>
+              <Label text="AUGE" class="ring-label"></Label>
+            </StackLayout>
           </GridLayout>
-          <Label row="2" [text]="'#' + s.tag" class="tile-tag" textWrap="true" maxLines="2" verticalAlignment="bottom"></Label>
-          <Label row="3" [text]="s.region" class="tile-region"></Label>
+          <Label row="1" [text]="'#' + s.tag" class="tile-tag" textWrap="true" maxLines="2" verticalAlignment="bottom"></Label>
+          <Label row="2" [text]="s.region" class="tile-region"></Label>
           @if (followed().has(s.id)) {
             <Label row="0" text="&#xe866;" class="mi followed-badge" horizontalAlignment="right" verticalAlignment="top"></Label>
           }
@@ -42,5 +52,7 @@
         <Label text="Nada en auge en este tema ahora mismo." class="muted end" width="100%"></Label>
       }
     </FlexboxLayout>
+    <ActivityIndicator [busy]="loadingMore()" class="feed-more" color="#ff3b30"></ActivityIndicator>
+    </StackLayout>
   </ScrollView>
 </GridLayout>

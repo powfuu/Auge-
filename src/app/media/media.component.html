@@ -20,7 +20,7 @@
   <StackLayout row="2" class="viewer-caption">
     @if (m.type === 'image') {
       <Label [text]="m.caption" class="viewer-title" textWrap="true"></Label>
-      <Label [text]="'Foto: ' + m.credit + ' · ' + m.license + ' · Wikimedia Commons'" class="viewer-credit" textWrap="true"></Label>
+      <Label [text]="'Foto: ' + m.credit + ' · ' + m.license" class="viewer-credit" textWrap="true"></Label>
     }
     <Label text="Ver original ↗" class="viewer-link" (tap)="openOriginal()"></Label>
   </StackLayout>

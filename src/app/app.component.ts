@@ -6,8 +6,10 @@ import { CoreTypes, View } from '@nativescript/core';
 import { filter, map } from 'rxjs';
 import { NsEvent, viewOf } from './core/animate';
 import { AuthService } from './core/auth.service';
+import { BriefService } from './core/brief.service';
 import { AvatarComponent } from './core/avatar.component';
 import { IconName, icon } from './core/icons';
+import { LayoutService } from './core/layout.service';
 import { NotificationsService } from './core/notifications.service';
 import { SyncService } from './core/sync.service';
 import { ThemeService } from './core/theme.service';
@@ -32,15 +34,42 @@ const TABS: { path: string; icon: IconName }[] = [
           @for (t of tabs; track t.path; let i = $index) {
             <GridLayout [col]="i" class="tab" (tap)="go($event, t.path)">
               @if (t.path === '/profile' && auth.user(); as u) {
-                <ns-avatar [avatarId]="u.avatarId" [size]="28" class="tab-avatar" [class.tab-avatar-on]="url() === t.path"></ns-avatar>
+                <ns-avatar [avatarId]="u.avatarId" [size]="21" class="tab-avatar" horizontalAlignment="center" [class.tab-avatar-on]="url() === t.path"></ns-avatar>
               } @else {
-                <SVGView [src]="svg(t.icon, url() === t.path)" width="26" height="26" stretch="aspectFit"></SVGView>
+                <SVGView [src]="svg(t.icon, url() === t.path)" width="19" height="19" stretch="aspectFit" horizontalAlignment="center" verticalAlignment="center"></SVGView>
               }
               @if (t.path === '/notifications' && unread()) {
                 <Label class="tab-dot" horizontalAlignment="center" verticalAlignment="top"></Label>
               }
             </GridLayout>
           }
+        </GridLayout>
+      }
+
+      <!-- Mini player (Escuchar Auges / Escuchar auge), floating above the tab bar on every screen. -->
+      @if (brief.open()) {
+        <GridLayout row="0" rows="auto, auto" class="player" verticalAlignment="bottom" (loaded)="playerIn($event)">
+          <GridLayout row="0" [columns]="segments()" class="pl-progress">
+            @for (p of brief.parts(); track $index; let i = $index) {
+              <StackLayout [col]="i" class="pl-seg" [class.pl-done]="i + 1 < brief.part() || (brief.done() && i + 1 === brief.part())"
+                           [class.pl-now]="i + 1 === brief.part() && !brief.isIntro() && !brief.done()" (tap)="brief.seek(i)"></StackLayout>
+            }
+          </GridLayout>
+          <GridLayout row="1" columns="auto, *, auto, auto, auto, auto" class="pl-row">
+            <StackLayout col="0" orientation="horizontal" class="pl-wave" verticalAlignment="center">
+              @for (b of [0, 1, 2, 3]; track b) {
+                <StackLayout class="pl-bar" verticalAlignment="bottom" (loaded)="waveBar($event, b)"></StackLayout>
+              }
+            </StackLayout>
+            <StackLayout col="1" class="pl-info" verticalAlignment="center" (tap)="openPlaying()">
+              <Label [text]="brief.kicker() + ' · ' + (brief.isIntro() ? 'intro' : brief.part() + '/' + brief.parts().length)" class="pl-kicker"></Label>
+              <Label [text]="brief.title()" class="pl-title"></Label>
+            </StackLayout>
+            <Label col="2" text="&#xe045;" class="mi pl-btn" (tap)="tapBtn($event); brief.prev()"></Label>
+            <Label col="3" [text]="brief.done() ? '&#xe042;' : brief.playing() ? '&#xe034;' : '&#xe037;'" class="mi pl-btn pl-main" (tap)="tapBtn($event); brief.toggle()"></Label>
+            <Label col="4" text="&#xe044;" class="mi pl-btn" (tap)="tapBtn($event); brief.next()"></Label>
+            <Label col="5" text="&#xe5cd;" class="mi pl-btn pl-x" (tap)="brief.close()"></Label>
+          </GridLayout>
         </GridLayout>
       }
 
@@ -61,6 +90,8 @@ const TABS: { path: string; icon: IconName }[] = [
 export class AppComponent {
   private router = inject(RouterExtensions);
   readonly auth = inject(AuthService);
+  readonly brief = inject(BriefService);
+  private layout = inject(LayoutService);
   private notifications = inject(NotificationsService);
   private theme = inject(ThemeService);
   readonly tabs = TABS;
@@ -85,10 +116,43 @@ export class AppComponent {
     return icon(name, this.theme.mode() === 'dark' ? '#e7e9ea' : '#0f1419', active);
   }
 
+  /** One column per part of the progress bar. */
+  readonly segments = computed(() => this.brief.parts().map(() => '*').join(', ') || '*');
+
+  playerIn(e: NsEvent) {
+    const v = viewOf(e);
+    v.translateY = 120;
+    v.opacity = 0;
+    v.animate({ translate: { x: 0, y: 0 }, opacity: 1, duration: 450, curve: CoreTypes.AnimationCurve.cubicBezier(0.16, 1, 0.3, 1) }).catch(() => {});
+  }
+
+  /** Equaliser bar: bounces while the voice is speaking, rests low otherwise. */
+  async waveBar(e: NsEvent, i: number) {
+    const v = viewOf(e);
+    v.originY = 1;
+    await new Promise((r) => setTimeout(r, i * 140));
+    while (v.isLoaded) {
+      const talking = this.brief.talking();
+      await v.animate({ scale: { x: 1, y: talking ? 0.3 + Math.random() * 0.7 : 0.25 }, duration: talking ? 220 + i * 40 : 400 }).catch(() => {});
+    }
+  }
+
+  tapBtn(e: NsEvent) {
+    const v = viewOf(e);
+    v.animate({ scale: { x: 0.85, y: 0.85 }, duration: 80 }).then(() => v.animate({ scale: { x: 1, y: 1 }, duration: 200, curve: CoreTypes.AnimationCurve.spring })).catch(() => {});
+  }
+
+  /** Tap on the title: open the story being read. */
+  openPlaying() {
+    const id = this.brief.ids()[this.brief.index()];
+    if (id) this.router.navigate(['/story', id], { transition: { name: 'slide', duration: 320, curve: 'easeOut' } });
+  }
+
   async go(e: NsEvent, path: string) {
     const v = viewOf(e);
     v.animate({ scale: { x: 0.85, y: 0.85 }, duration: 80 }).then(() => v.animate({ scale: { x: 1, y: 1 }, duration: 200, curve: CoreTypes.AnimationCurve.spring }));
-    if (path === this.url()) return;
+    // Tapping the tab you are on scrolls it back to the top, smoothly (like X).
+    if (path === this.url()) return this.layout.scrollTopTick.update((n) => n + 1);
     this.router.navigate([path], { clearHistory: true, animated: true, transition: { name: 'fade', duration: 180 } });
   }
 
